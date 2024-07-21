@@ -23,7 +23,7 @@ const promotionalProducts = [
 const Products = () => {
   return (
     <div className="products">
-      <ImageSlider />
+      {/* <ImageSlider /> */}
 
       <section className="featured-products">
         <h2>Sản phẩm nổi bật</h2>

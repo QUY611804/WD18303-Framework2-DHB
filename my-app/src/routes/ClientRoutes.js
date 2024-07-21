@@ -7,10 +7,12 @@ import Contact from '../pages/client/component/Contact';
 import SignIn from '../pages/client/component/SignIn';
 import SignUp from '../pages/client/component/SignUp';
 import Footer from '../pages/client/component/Footer';
+import Navbar from '../pages/client/component/Navbar';
 
 const ClientRoutes = () => {
   return (
     <>
+       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
