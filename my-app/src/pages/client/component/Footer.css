@@ -1,0 +1,28 @@
+.footer {
+    background-color: #d4a373; /* Màu nền của footer */
+    padding: 20px 0; /* Khoảng cách bên trong */
+    text-align: center; /* Căn giữa văn bản */
+    border-top: 1px solid #b89c6e; /* Đường viền trên của footer */
+    color: #fff; /* Màu chữ */
+  }
+  
+  .footer-links {
+    display: flex;
+    justify-content: center; /* Căn giữa các liên kết */
+    margin-bottom: 10px; /* Khoảng cách dưới của các liên kết */
+  }
+  
+  .footer-links a {
+    color: #fff; /* Màu chữ của các liên kết */
+    text-decoration: none; /* Loại bỏ gạch chân khỏi liên kết */
+    margin: 0 15px; /* Khoảng cách giữa các liên kết */
+  }
+  
+  .footer-links a:hover {
+    text-decoration: underline; /* Thêm gạch chân khi di chuột qua liên kết */
+  }
+  
+  .footer-copy {
+    margin-top: 10px; /* Khoảng cách trên của phần copy */
+  }
+  

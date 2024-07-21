@@ -1,0 +1,55 @@
+/* Cập nhật màu nền của Navbar thành màu bò đậm */
+.navbar {
+  background-color: #d4a373; /* Màu bò đậm */
+  padding: 10px 20px;
+  border-bottom: 1px solid #b89c6e; /* Đường viền dưới Navbar */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* CSS cho logo */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  height: 50px; /* Chiều cao của logo, giảm xuống để làm nhỏ navbar */
+  width: auto; /* Đảm bảo tỉ lệ chiều cao/chiều rộng của logo */
+}
+
+/* Cập nhật màu sắc cho các liên kết trong Navbar */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  flex: 1; /* Để chiếm hết không gian giữa logo và đăng nhập/đăng ký */
+  justify-content: center; /* Căn giữa các liên kết */
+}
+
+.navbar-links a {
+  color: #fff; /* Màu chữ của các liên kết */
+  text-decoration: none; /* Loại bỏ gạch chân khỏi liên kết */
+  margin: 0 15px;
+  font-size: 1rem;
+}
+
+.navbar-links a:hover {
+  text-decoration: underline; /* Thêm gạch chân khi di chuột qua liên kết */
+}
+
+.navbar-auth {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-auth a {
+  color: #fff; /* Màu chữ của các liên kết */
+  text-decoration: none; /* Loại bỏ gạch chân khỏi liên kết */
+  margin: 0 15px;
+  font-size: 1rem;
+}
+
+.navbar-auth a:hover {
+  text-decoration: underline; /* Thêm gạch chân khi di chuột qua liên kết */
+}
