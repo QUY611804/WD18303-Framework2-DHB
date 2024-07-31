@@ -6,13 +6,13 @@ const Navbar = () => {
     <Flex
       as="nav"
       p={4}
-      bg="teal.500"
+      bg=" #61dafb"
       color="white"
       justify="space-between"
       align="center"
     >
       <Box>
-        <Text fontSize="xl" fontWeight="bold">Admin Panel</Text>
+        <Text fontSize="xl" fontWeight="bold"> Panel</Text>
       </Box>
     </Flex>
   );

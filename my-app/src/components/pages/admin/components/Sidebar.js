@@ -1,13 +1,14 @@
 import React from 'react';
-import { Box, Stack, Text, Link, useDisclosure, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, IconButton, useBreakpointValue, useColorModeValue } from '@chakra-ui/react';
+import { Box, Stack, Text, Link, useDisclosure, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, IconButton, useBreakpointValue, useColorModeValue, Button } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const sidebarBgColor = useColorModeValue('gray.800', 'gray.900');
+  const sidebarBgColor = 'red';
   const linkColor = useColorModeValue('gray.100', 'gray.300');
+  const activeBg = useColorModeValue("white", "gray.700");
 
   return (
     <>
@@ -54,10 +55,11 @@ const Sidebar = () => {
 
       {!isMobile && (
         <Box
+        
           width="250px"
           height="100vh"
           bg={sidebarBgColor}
-          color="white"
+          color="#5a5757"
           p={4}
           position="fixed"
           top="0"
@@ -67,9 +69,13 @@ const Sidebar = () => {
         >
           <Stack spacing={4}>
             <Text fontSize="lg" fontWeight="bold">Sidebar</Text>
+          
             <NavLink to="/admin/dashboard">
+            
               <Link color={linkColor}>Dashboard</Link>
+              
             </NavLink>
+
             <NavLink to="/admin/products">
               <Link color={linkColor}>Products</Link>
             </NavLink>
