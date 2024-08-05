@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   return (
-    <Flex direction="column" height="100vh" bg="#f7fafc">
+    <Flex direction="column" height="100vh" bg="#f7fafc" fontFamily="math">
       <Flex>
         <Sidebar />
         <Flex

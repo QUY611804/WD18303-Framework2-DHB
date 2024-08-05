@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -10,9 +10,14 @@ import {
   Td,
   Avatar,
   Text,
-  Badge,
   Button,
   Flex,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
 
 // Sample product data
@@ -36,9 +41,24 @@ const products = [
   // Add more products as needed...
 ];
 
-
-
 const ProductsTable = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const cancelRef = useRef();
+
+  const onClose = () => setIsOpen(false);
+
+  const handleDeleteClick = (product) => {
+    setSelectedProduct(product);
+    setIsOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // Logic to delete the product
+    console.log("Deleted product:", selectedProduct);
+    setIsOpen(false);
+  };
+
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md" fontFamily="math">
       <Flex mb={5} justify="space-between" align="center">
@@ -46,7 +66,14 @@ const ProductsTable = () => {
           Thông tin sản phẩm
         </Text>
         <Link to="products/add">
-          <Button colorScheme="teal">Thêm sản phẩm </Button>
+          <Button
+            bg="#1ba43b"
+            color="white"
+            _hover={{ bg: "#189537" }} // Màu khi hover
+            _active={{ bg: "#157f31" }} // Màu khi click
+          >
+            Thêm sản phẩm
+          </Button>
         </Link>
       </Flex>
 
@@ -82,9 +109,7 @@ const ProductsTable = () => {
                 <Text>{product.price}</Text>
               </Td>
               <Td>
-                <Text >
-                  {product.quantity}
-                </Text>
+                <Text>{product.quantity}</Text>
               </Td>
               <Td>
                 <Link to={`products/edit/${product.id}`}>
@@ -92,7 +117,11 @@ const ProductsTable = () => {
                     Sửa
                   </Button>
                 </Link>
-                <Button colorScheme="red" size="sm">
+                <Button
+                  colorScheme="red"
+                  size="sm"
+                  onClick={() => handleDeleteClick(product)}
+                >
                   Xóa
                 </Button>
               </Td>
@@ -100,6 +129,33 @@ const ProductsTable = () => {
           ))}
         </Tbody>
       </Table>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Xác nhận xóa
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Bạn có chắc chắn muốn xóa sản phẩm này không?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Hủy
+              </Button>
+              <Button colorScheme="red" onClick={handleConfirmDelete} ml={3}>
+                Xóa
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };

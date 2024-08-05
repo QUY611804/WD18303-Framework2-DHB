@@ -44,3 +44,22 @@ export const HomeIcon = createIcon({
       </g>
     ),
   });
+
+
+
+
+
+  export const InvoiceIcon = createIcon({
+    displayName: "InvoiceIcon",
+    viewBox: "0 0 24 24",
+    path: (
+      <g>
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+          fill="currentColor"
+          d="M20 2H8c-1.1 0-2 .9-2 2v16c0 .55.45 1 1 1 .25 0 .5-.1.71-.29l2.3-2.3 2.3 2.3c.39.39 1.02.39 1.41 0l2.3-2.3 2.3 2.3c.39.39 1.02.39 1.41 0 .21-.2.29-.45.29-.71V4c0-1.1-.9-2-2-2zm-2 14H10v-2h8v2zm0-4H10V6h8v6z"
+        />
+      </g>
+    ),
+  });
+  

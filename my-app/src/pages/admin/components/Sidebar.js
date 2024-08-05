@@ -3,22 +3,14 @@ import {
   Box,
   Stack,
   Text,
-  Link,
-  useDisclosure,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  IconButton,
-  useBreakpointValue,
-  useColorModeValue,
   Button,
   Avatar,
+  useDisclosure,
+  useBreakpointValue,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { NavLink } from "react-router-dom";
-import { HomeIcon, ProfileIcon, BagIcon } from "../../../components/icon/icon";
+import { HomeIcon, ProfileIcon, BagIcon, InvoiceIcon } from "../../../components/icon/icon";
 
 // Placeholder user data
 const user = {
@@ -30,96 +22,20 @@ const user = {
 const Sidebar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const sidebarBgColor = "#f7fafc"; // Fixed color value for the sidebar background
-  const linkColor = useColorModeValue("#a0aec0", "#cbd5e0"); // Adjust fallback color for dark mode
+  const sidebarBgColor = "#f7fafc";
+  const linkColor = useColorModeValue("gray.500", "gray.400");
   const activeBg = useColorModeValue("white");
-  const activeColor = useColorModeValue("black", "white");
+  const activeColor = useColorModeValue("#32dfd4", "white");
+
+  const getLinkStyles = ({ isActive }) => ({
+    textDecoration: "none",
+    color: isActive ? activeColor : linkColor,
+    backgroundColor: isActive ? activeBg : "inherit",
+    fontWeight: isActive ? "bold" : "normal",
+  });
 
   return (
     <>
-      {isMobile && (
-        <IconButton
-          aria-label="Open sidebar"
-          icon={<HamburgerIcon />}
-          onClick={onOpen}
-          position="fixed"
-          top="4"
-          left="4"
-          zIndex="overlay"
-        />
-      )}
-
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen} fontFamily="math">
-        <DrawerOverlay />
-        <DrawerContent bg={sidebarBgColor}>
-          <DrawerHeader>
-            <IconButton
-              aria-label="Close sidebar"
-              icon={<CloseIcon />}
-              onClick={onClose}
-              position="absolute"
-              top="4"
-              right="4"
-            />
-          </DrawerHeader>
-          <DrawerBody>
-            <Stack spacing={4} mt={8}>
-              <Box textAlign="center">
-                <Avatar size="xl" name={user.name} src={user.avatar} mb={4} />
-                <Text fontSize="lg" fontWeight="bold">
-                  {user.name}
-                </Text>
-                <Text fontSize="sm" color="gray.500">
-                  {user.email}
-                </Text>
-              </Box>
-              <NavLink to="/admin/dashboard" activeClassName="active">
-                <Link
-                  _activeLink={{
-                    bg: activeBg,
-                    color: activeColor,
-                    fontWeight: "bold",
-                  }}
-                  _hover={{ textDecoration: "none" }}
-                  p={2}
-                  borderRadius="md"
-                >
-                  Dashboard
-                </Link>
-              </NavLink>
-              <NavLink to="/admin/products" activeClassName="active">
-                <Link
-                  _activeLink={{
-                    bg: activeBg,
-                    color: activeColor,
-                    fontWeight: "bold",
-                  }}
-                  _hover={{ textDecoration: "none" }}
-                  p={2}
-                  borderRadius="md"
-                >
-                  Products
-                </Link>
-              </NavLink>
-              <NavLink to="/admin/users" activeClassName="active">
-                <Link
-                  _activeLink={{
-                    bg: activeBg,
-                    color: activeColor,
-                    fontWeight: "bold",
-                  }}
-                  _hover={{ textDecoration: "none" }}
-                  p={2}
-                  borderRadius="md"
-                >
-                  Users
-                </Link>
-              </NavLink>
-            </Stack>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-
       {!isMobile && (
         <Box
           width="250px"
@@ -143,80 +59,101 @@ const Sidebar = () => {
                 {user.email}
               </Text>
             </Box>
-            <NavLink to="/admin/dashboard" activeClassName="active">
-              <Button
-                fontFamily="math"
-                as={Link}
-                to="/admin/dashboard"
-                justifyContent="flex-start"
-                alignItems="center"
-                bg="inherit"
-                _hover={{ bg: activeBg, textDecoration: "none" }}
-                _activeLink={{
-                  bg: activeBg,
-                  color: activeColor,
-                  fontWeight: "bold",
-                }}
-                mb="0.5px"
-                mx="auto"
-                ps="16px"
-                py="12px"
-                borderRadius="15px"
-                w="100%"
-                height="50px"
-              >
-                <HomeIcon boxSize={5} color="#21e4e0" mr="10px" /> Tổng kết
-              </Button>
+            <NavLink to="/admin/dashboard">
+              {({ isActive }) => (
+                <Button
+                  fontFamily="math"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  bg={isActive ? activeBg : "inherit"}
+                  color={isActive ? activeColor : linkColor}
+                  fontWeight={isActive ? "bold" : "normal"}
+                  _hover={{ bg: activeBg, textDecoration: "none" }}
+                  _active={{ bg: activeBg, color: activeColor }}
+                  mb="0.5px"
+                  mx="auto"
+                  ps="16px"
+                  py="12px"
+                  borderRadius="15px"
+                  w="100%"
+                  height="50px"
+                  leftIcon={<HomeIcon boxSize={5} color={isActive ? activeColor : linkColor} />}
+                >
+                  Tổng kết
+                </Button>
+              )}
             </NavLink>
-            <NavLink to="/admin/products" activeClassName="active">
-              <Button
-                fontFamily="math"
-                as={Link}
-                to="/admin/products"
-                justifyContent="flex-start"
-                alignItems="center"
-                bg="inherit"
-                _hover={{ bg: activeBg, textDecoration: "none" }}
-                _activeLink={{
-                  bg: activeBg,
-                  color: activeColor,
-                  fontWeight: "bold",
-                }}
-                mb="0.5px"
-                mx="auto"
-                ps="16px"
-                py="12px"
-                borderRadius="15px"
-                w="100%"
-                height="50px"
-              >
-                <BagIcon boxSize={5} color="#21e4e0" mr="10px" /> Sản phẩm
-              </Button>
+            <NavLink to="/admin/products">
+              {({ isActive }) => (
+                <Button
+                  fontFamily="math"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  bg={isActive ? activeBg : "inherit"}
+                  color={isActive ? activeColor : linkColor}
+                  fontWeight={isActive ? "bold" : "normal"}
+                  _hover={{ bg: activeBg, textDecoration: "none" }}
+                  _active={{ bg: activeBg, color: activeColor }}
+                  mb="0.5px"
+                  mx="auto"
+                  ps="16px"
+                  py="12px"
+                  borderRadius="15px"
+                  w="100%"
+                  height="50px"
+                  leftIcon={<BagIcon boxSize={5} color={isActive ? activeColor : linkColor} />}
+                >
+                  Sản phẩm
+                </Button>
+              )}
             </NavLink>
-            <NavLink to="/admin/user" activeClassName="active">
-              <Button
-                fontFamily="math"
-                as={Link}
-                to="/admin/user"
-                justifyContent="flex-start"
-                alignItems="center"
-                bg="inherit"
-                _hover={{ bg: activeBg, textDecoration: "none" }}
-                _activeLink={{
-                  bg: activeBg,
-                  color: activeColor,
-                  fontWeight: "bold",
-                }}
-                mb="0.5px"
-                mx="auto"
-                ps="16px"
-                py="12px"
-                borderRadius="15px"
-                w="100%"
-                height="50px"
-              >
-                <ProfileIcon boxSize={5} color="#21e4e0" mr="10px" /> Người dùng
-              </Button>
+            <NavLink to="/admin/user">
+              {({ isActive }) => (
+                <Button
+                  fontFamily="math"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  bg={isActive ? activeBg : "inherit"}
+                  color={isActive ? activeColor : linkColor}
+                  fontWeight={isActive ? "bold" : "normal"}
+                  _hover={{ bg: activeBg, textDecoration: "none" }}
+                  _active={{ bg: activeBg, color: activeColor }}
+                  mb="0.5px"
+                  mx="auto"
+                  ps="16px"
+                  py="12px"
+                  borderRadius="15px"
+                  w="100%"
+                  height="50px"
+                  leftIcon={<ProfileIcon boxSize={5} color={isActive ? activeColor : linkColor} />}
+                >
+                  Người dùng
+                </Button>
+              )}
+            </NavLink>
+            <NavLink to="/admin/orders">
+              {({ isActive }) => (
+                <Button
+                  fontFamily="math"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  bg={isActive ? activeBg : "inherit"}
+                  color={isActive ? activeColor : linkColor}
+                  fontWeight={isActive ? "bold" : "normal"}
+                  _hover={{ bg: activeBg, textDecoration: "none" }}
+                  _active={{ bg: activeBg, color: activeColor }}
+                  mb="0.5px"
+                  mx="auto"
+                  ps="16px"
+                  py="12px"
+                  borderRadius="15px"
+                  w="100%"
+                  height="50px"
+                  leftIcon={<InvoiceIcon boxSize={5} color={isActive ? activeColor : linkColor} />}
+                >
+                  Đơn hàng
+                </Button>
+              )}
             </NavLink>
           </Stack>
         </Box>

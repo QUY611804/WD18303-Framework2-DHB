@@ -1,9 +1,8 @@
 import React from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
-import  AuthorsTable from  "./user/component/Users"
-import  Products from  "./products/component/Products"
+
 
 const Dashboard = () => {
   return (
@@ -19,11 +18,14 @@ const Dashboard = () => {
         >
           <Navbar />
           <Flex direction="column" p={4} mt="60px">
-            <h1 fontFamily="math">Trang chủ</h1>
+            <h1 fontFamily="math">Tổng kết</h1>
           </Flex>
         </Flex>
+        
       </Flex>
+     
     </Flex>
+
   );
 };
 export default Dashboard;
