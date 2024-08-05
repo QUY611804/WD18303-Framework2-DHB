@@ -1,8 +1,8 @@
 const connection = require('../config/database');
 
-// Example function to get all users
-exports.getAllUsers = (req, res) => {
-  connection.query('SELECT * FROM users', (err, results) => {
+// Example function to get all products
+exports.getAllProducts = (req, res) => {
+  connection.query('SELECT * FROM products', (err, results) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
