@@ -1,62 +1,84 @@
 .home {
-    margin: 0 auto;
-    padding: 0 40px;
-    box-sizing: border-box;
-  }
-  
-  /* Phần giới thiệu */
-  .intro {
-    margin: 0 auto;
-    padding: 40px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Phần sản phẩm nổi bật và sản phẩm bán chạy */
-  section {
-    margin: 0 auto;
-    padding: 40px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  section h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-  
-  .product-list {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-  }
-  
-  .product-item {
-    width: 30%;
-    background-color: #fff;
-    margin: 1rem;
-    text-align: center;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .product-item img {
-    width: 100%;
-    height: auto;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .product-item h3 {
-    font-size: 1.2rem;
-    margin: 0.5rem 0;
-  }
-  
-  .product-price {
-    font-size: 1.1rem;
-    color: #ff5722; /* Màu sắc nổi bật cho giá sản phẩm */
-    margin: 0.5rem 0;
-  }
-  
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+.intro, section {
+  margin: 0 auto;
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.product-list {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.product-item {
+  width: 30%;
+  background-color: #fff;
+  margin: 1rem;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-item img {
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #ddd;
+}
+
+.product-item h3 {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.product-price {
+  font-size: 1.1rem;
+  color: #ff5722;
+  margin: 0.5rem 0;
+}
+
+.product-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  flex-direction: column-reverse;
+}
+
+.buy-button, .details-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius:0;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+}
+
+.buy-button {
+  background-color: #4CAF50;
+}
+
+.details-button {
+  background-color: #2196F3;
+}
+
+.buy-button:hover {
+  background-color: #45a049;
+}
+
+.details-button:hover {
+  background-color: #0b7dda;
+}

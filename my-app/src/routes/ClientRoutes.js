@@ -8,6 +8,8 @@ import SignIn from '../pages/client/component/SignIn';
 import SignUp from '../pages/client/component/SignUp';
 import Footer from '../pages/client/component/Footer';
 import Navbar from '../pages/client/component/Navbar';
+import ProductDetails from '../pages/client/component/ProductDetails';
+import Cart from '../pages/client/component/Cart';
 
 const ClientRoutes = () => {
   return (
@@ -20,6 +22,8 @@ const ClientRoutes = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
       <Footer />
     </>

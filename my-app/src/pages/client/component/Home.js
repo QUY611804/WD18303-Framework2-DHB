@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import ImageSlider from '../component/ImageSlider';
 import './Home.css';
 
@@ -26,6 +27,10 @@ const Home = () => {
                 <img src={product.imgSrc} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
                 <p className="product-price">{product.price}</p>
+                <div className="product-buttons">
+                  
+                  <Link to={`/product/${product.id}`} className="details-button">Chi tiết</Link>
+                </div>
               </div>
             ))}
           </div>
@@ -39,6 +44,10 @@ const Home = () => {
                 <img src={product.imgSrc} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
                 <p className="product-price">{product.price}</p>
+                <div className="product-buttons">
+                  
+                  <Link to={`/product/${product.id}`} className="details-button">Chi tiết</Link>
+                </div>
               </div>
             ))}
           </div>

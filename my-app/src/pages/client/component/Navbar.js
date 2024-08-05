@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './Navbar.css';
-import logo from '../../../../src/assets/logoo.png'; // Đường dẫn mới
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Navbar.css";
+import logo from "../../../../src/assets/logoo.png"; // Đường dẫn mới
 
 const Navbar = () => {
   return (
@@ -16,8 +16,10 @@ const Navbar = () => {
         <Link to="/contact">Liên hệ</Link>
       </div>
       <div className="navbar-auth">
+        <Link to="/cart" className="cart-link">
+          <i className="fas fa-shopping-cart"></i> Giỏ hàng
+        </Link>
         <Link to="/signin">Đăng nhập</Link>
-        <Link to="/signup">Đăng ký</Link>
       </div>
     </nav>
   );
