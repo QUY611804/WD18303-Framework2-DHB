@@ -1,4 +1,4 @@
-const connection = require("../config/database");
+const connection = require('../config/database');
 
 exports.getAllProducts = (req, res) => {
   connection.query("SELECT * FROM products", (err, results) => {
@@ -84,4 +84,140 @@ WHERE
       res.status(200).json(results[0]); // Trả về sản phẩm đầu tiên
     }
   );
+};
+
+
+
+
+exports.getAllProducts = (req, res) => {
+  connection.query("SELECT * FROM products", (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json(results);
+  });
+};
+
+exports.getProductById = (req, res) => {
+  const productId = req.params.id;
+  connection.query(
+    "SELECT * FROM products WHERE id = ?",
+    [productId],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      res.status(200).json(results[0]);
+    }
+  );
+};
+
+exports.updateProduct = (req, res) => {
+  const productId = req.params.id;
+  const { name, price, sell_price, description, image, status, category_id } =
+    req.body;
+
+  // Prepare the SQL query
+  const query = `
+    UPDATE products 
+    SET 
+      name = ?, 
+      image = ?, 
+      price = ?, 
+      sell_price = ?, 
+      description = ?, 
+      status = ?, 
+      category_id = ? 
+    WHERE 
+      id = ?;
+  `;
+  const values = [
+    name,
+    image,
+    price,
+    sell_price,
+    description,
+    status,
+    category_id,
+    productId,
+  ];
+
+  // Execute the query
+  connection.query(query, values, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json({ message: "Product updated successfully" });
+  });
+};
+exports.postProduct = async (req, res, next) => {
+  try {
+    console.log("Request Body:", req.body);
+    console.log("Uploaded File:", req.file);
+
+    const {
+      name,
+      price,
+      sell_price,
+      description,
+      status,
+      category_id,
+    } = req.body;
+    const image = req.file ? req.file.filename : null;
+
+    const query = `
+      INSERT INTO products (name, image, price, sell_price, description, status, category_id) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+    const values = [
+      name,
+      image,
+      price,
+      sell_price,
+      description,
+      status,
+      category_id,
+    ];
+
+    connection.query(query, values, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      res.status(201).json({
+        message: "Product added successfully",
+        productId: results.insertId,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    next(error);
+  }
+};
+
+exports.deleteProduct = (req, res) => {
+  const productId = req.params.id;
+
+  // Prepare the SQL query to delete the product
+  const query = "DELETE FROM products WHERE id = ?";
+
+  // Execute the query
+  connection.query(query, [productId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+// Check if any rows were affected (i.e., if the product was deleted)
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Respond with a success message
+    res.status(200).json({ message: "Product deleted successfully" });
+  });
 };

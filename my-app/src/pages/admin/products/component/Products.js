@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -18,59 +18,87 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
-
-// Sample product data
-const products = [
-  {
-    id: 1,
-    name: "Product A",
-    category: "Category 1",
-    price: "$20",
-    quantity: "120",
-    image: "https://bit.ly/broken-link",
-  },
-  {
-    id: 2,
-    name: "Product B",
-    category: "Category 2",
-    price: "$30",
-    quantity: "200",
-    image: "https://bit.ly/broken-link",
-  },
-  // Add more products as needed...
-];
+import { fetchProducts, deleteProduct } from "../../../../service/api/products";
 
 const ProductsTable = () => {
+  const [products, setProducts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const cancelRef = useRef();
+  const toast = useToast();
+  const hoverBgColor = useColorModeValue("gray.100", "gray.700");
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        if (data) {
+          setProducts(data);
+        }
+      } catch (error) {
+        toast({
+          title: "Error fetching products",
+          description: "Failed to fetch product list.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        console.error("Failed to fetch products:", error);
+      }
+    };
+    getProducts();
+  }, [toast]);
 
   const onClose = () => setIsOpen(false);
 
   const handleDeleteClick = (product) => {
     setSelectedProduct(product);
-    setIsOpen(true);
+    setIsOpen(true); // Open the confirmation dialog
   };
 
-  const handleConfirmDelete = () => {
-    // Logic to delete the product
-    console.log("Deleted product:", selectedProduct);
-    setIsOpen(false);
+  const handleConfirmDelete = async () => {
+    try {
+      if (selectedProduct) {
+        await deleteProduct(selectedProduct.id);
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => product.id !== selectedProduct.id)
+        );
+        toast({
+          title: "Product deleted.",
+          description: "Product has been deleted successfully.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error deleting product",
+        description: "Failed to delete the product.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      console.error("Failed to delete product:", error);
+    }
+    setIsOpen(false); // Close the dialog
   };
 
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md" fontFamily="math">
       <Flex mb={5} justify="space-between" align="center">
         <Text fontSize="2xl" fontWeight="bold">
-          Thông tin sản phẩm
+          
         </Text>
-        <Link to="products/add">
+        <Link to="admin/products/add">
           <Button
             bg="#1ba43b"
             color="white"
-            _hover={{ bg: "#189537" }} // Màu khi hover
-            _active={{ bg: "#157f31" }} // Màu khi click
+            _hover={{ bg: "#189537" }}
+            _active={{ bg: "#157f31" }}
           >
             Thêm sản phẩm
           </Button>
@@ -81,38 +109,47 @@ const ProductsTable = () => {
         <Thead>
           <Tr>
             <Th>ID</Th>
+            <Th>Ảnh</Th>
             <Th>Tên sản phẩm</Th>
             <Th>Loại sản phẩm</Th>
             <Th>Giá</Th>
-            <Th>Số lượng</Th>
-            <Th>hoạt động</Th>
+            <Th>Giảm giá</Th>
+            <Th>Trạng thái</Th>
+            <Th>Hoạt động</Th>
           </Tr>
         </Thead>
         <Tbody>
           {products.map((product) => (
-            <Tr key={product.id}>
+            <Tr key={product.id} _hover={{ bg: hoverBgColor }}>
               <Td>
                 <Text fontWeight="bold">{product.id}</Text>
               </Td>
               <Td>
                 <Box display="flex" alignItems="center">
                   <Avatar src={product.image} mr={3} />
+                </Box>
+              </Td>
+              <Td>
+                <Box display="flex" alignItems="center">
                   <Box>
                     <Text fontWeight="bold">{product.name}</Text>
                   </Box>
                 </Box>
               </Td>
               <Td>
-                <Text>{product.category}</Text>
+                <Text>{product.category_id}</Text>
               </Td>
               <Td>
                 <Text>{product.price}</Text>
               </Td>
               <Td>
-                <Text>{product.quantity}</Text>
+                <Text>{product.sell_price}</Text>
               </Td>
               <Td>
-                <Link to={`products/edit/${product.id}`}>
+                <Text>{product.status}</Text>
+              </Td>
+              <Td>
+                <Link to={`admin/products/edit/${product.id}`}>
                   <Button colorScheme="blue" size="sm" mr={2}>
                     Sửa
                   </Button>

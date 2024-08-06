@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -19,76 +19,82 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  useColorModeValue,
+  useToast, // Correctly import useToast
 } from "@chakra-ui/react";
 
-// Sample data
-const data = [
-  {
-    id: 1,
-    author: "Esthera Jackson",
-    email: "alexa@simmmp.com",
-    phone: "0920183198",
-    avatar: "https://bit.ly/broken-link",
-    function: { title: "Organization", subtitle: "Manager" },
-    status: "admin",
-    employed: "14/06/21",
-  },
-  {
-    id: 2,
-    author: "Alexa Liras",
-    email: "laurent@simmmp.com",
-    phone: "0920183198",
-    avatar: "https://bit.ly/broken-link",
-    function: { title: "Developer", subtitle: "Programmer" },
-    status: "user",
-    employed: "12/05/21",
-  },  {
-    id: 2,
-    author: "Alexa Liras",
-    email: "laurent@simmmp.com",
-    phone: "0920183198",
-    avatar: "https://bit.ly/broken-link",
-    function: { title: "Developer", subtitle: "Programmer" },
-    status: "user",
-    employed: "12/05/21",
-  },
-  // Add more data as needed...
-];
-
-const statusBadgeColor = (status) => {
-  switch (status) {
-    case "admin":
-      return { bg: "red.500", color: "white" };
-    case "user":
-      return { bg: "gray.500", color: "white" };
-    default:
-      return { bg: "gray.500", color: "white" };
-  }
-};
+import { fetchUsers, deleteUser } from "../../../../service/api/users";
 
 const AuthorsTable = () => {
+  const [data, setData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const cancelRef = useRef();
+  const toast = useToast(); // Initialize toast
+
+  useEffect(() => {
+    const getUser = async () => {
+      const fetchedData = await fetchUsers();
+      if (fetchedData) {
+        setData(fetchedData);
+      }
+    };
+    getUser();
+  }, []);
+
+  const hoverBgColor = useColorModeValue("gray.100", "gray.700");
 
   const onClose = () => setIsOpen(false);
+
+  const handleConfirmDelete = async () => {
+    try {
+      if (selectedUser) {
+        await deleteUser(selectedUser.id); // Changed to deleteUser
+        setData((prevData) =>
+          prevData.filter((user) => user.id !== selectedUser.id)
+        );
+        toast({
+          title: "User deleted.",
+          description: "User has been deleted successfully.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error deleting user",
+        description: "Failed to delete the user.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      console.error("Failed to delete user:", error);
+    }
+    setIsOpen(false); // Close the dialog
+  };
 
   const handleDeleteClick = (user) => {
     setSelectedUser(user);
     setIsOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    // Logic to delete the user
-    console.log("Deleted user:", selectedUser);
-    setIsOpen(false);
+  const statusBadgeColor = (status) => {
+    switch (status) {
+      case "admin":
+        return { bg: "red.500", color: "white" };
+      case "user":
+        return { bg: "gray.500", color: "white" };
+      default:
+        return { bg: "gray.500", color: "white" };
+    }
   };
 
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md" fontFamily="math">
       <Flex mb={5} justify="space-between" align="center">
         <Text fontSize="2xl" fontWeight="bold">
-          Thông tin người dùng
+          
         </Text>
         <Link to="user/add">
           <Button
@@ -110,13 +116,12 @@ const AuthorsTable = () => {
             <Th>Tài khoản</Th>
             <Th>Số điện thoại</Th>
             <Th>Phân quyền</Th>
-            <Th>Thời gian đăng ký</Th>
             <Th>Hoạt động</Th>
           </Tr>
         </Thead>
         <Tbody>
           {data.map((item) => (
-            <Tr key={item.id}>
+            <Tr key={item.id} _hover={{ bg: hoverBgColor }}>
               <Td>
                 <Box display="flex" alignItems="center">
                   <Box>
@@ -126,9 +131,9 @@ const AuthorsTable = () => {
               </Td>
               <Td>
                 <Box display="flex" alignItems="center">
-                  <Avatar src={item.avatar} mr={3} />
+                  <Avatar src={item.image} mr={3} />
                   <Box>
-                    <Text fontWeight="bold">{item.author}</Text>
+                    <Text fontWeight="bold">{item.name}</Text>
                     <Text fontSize="sm" color="gray.500">
                       {item.email}
                     </Text>
@@ -137,9 +142,9 @@ const AuthorsTable = () => {
               </Td>
 
               <Td>
-                <Text fontWeight="bold">{item.function.title}</Text>
+                <Text fontWeight="bold">{item.username}</Text>
                 <Text fontSize="sm" color="gray.500">
-                  {item.function.subtitle}
+                  {/* {item.function.name} */}
                 </Text>
               </Td>
               <Td>
@@ -151,15 +156,13 @@ const AuthorsTable = () => {
               </Td>
               <Td>
                 <Badge
-                  bg={statusBadgeColor(item.status).bg}
-                  color={statusBadgeColor(item.status).color}
+                  bg={statusBadgeColor(item.role).bg}
+                  color={statusBadgeColor(item.role).color}
                 >
-                  {item.status}
+                  {item.role}
                 </Badge>
               </Td>
-              <Td>
-                <Text>{item.employed}</Text>
-              </Td>
+
               <Td>
                 <Link to={`user/edit/${item.id}`}>
                   <Button colorScheme="blue" size="sm" mr={2}>

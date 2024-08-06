@@ -10,8 +10,8 @@ const ProductsRoutes = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<ProductsTable />} />
-        <Route path="products/add" element={<AddProducts />} />
-        <Route path="products/edit/:id" element={<EditProducts />} />
+        <Route path="admin/products/add" element={<AddProducts />} />
+        <Route path="admin/products/edit/:id" element={<EditProducts />} />
       </Route>
       <Route path="/*" element={<Navigate to="/products" />} />
     </Routes>

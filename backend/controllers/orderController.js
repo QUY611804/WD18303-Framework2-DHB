@@ -65,3 +65,29 @@ exports.PostOrders = (req, res) => {
   });
 };
 
+exports.getOrderById = (req, res) => {
+  const orderId = req.params.id; //Sử dụng cách đặt tên camelCase nhất quán
+
+  // Query the database to get user by ID
+  connection.query(
+    "SELECT * FROM orders WHERE id = ?", // SQL query
+    [orderId], // Truy vấn tham số hóa để ngăn chặn SQL injection
+    (err, results) => {
+      if (err) {
+        // Ghi lại lỗi và phản hồi bằng mã trạng thái 500
+        console.error("Database query error:", err);
+        return res
+          .status(500)
+          .json({ error: "An error occurred while fetching the user." });
+      }
+
+      if (results.length === 0) {
+        // Nếu không tìm thấy người dùng, hãy trả lời bằng mã trạng thái 404
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Respond with the user data
+      res.status(200).json(results[0]);
+    }
+  );
+};

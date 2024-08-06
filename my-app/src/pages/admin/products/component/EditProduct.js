@@ -1,145 +1,214 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   FormControl,
   FormLabel,
   Input,
   Button,
+  Select,
   useToast,
-  Heading,
-  FormErrorMessage,
 } from "@chakra-ui/react";
+import {
+  fetchProductById,
+  updateProduct,
+} from "../../../../service/api/products"; 
+import { fetchCategories } from "../../../../service/api/Category";
+import axios from "axios";
 
 const EditProduct = () => {
-  const { id } = useParams();
+  const [product, setProduct] = useState(null);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState("");
+  const [sell_price, setSellPrice] = useState("");
+  const [status, setStatus] = useState("");
   const [image, setImage] = useState("");
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const [imageFile, setImageFile] = useState(null); 
+  const [categories, setCategories] = useState([]);
+  const [description, setDescription] = useState("");
   const toast = useToast();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(() => {
-    // Fetch product data based on `id` (e.g., from API)
-    // Here is a mock example:
-    const fetchProduct = async () => {
-      // Simulate API call
-      const product = {
-        id,
-        name: "Sample Product",
-        category: "Category 1",
-        price: "20",
-        quantity: "2000",
-        image: "https://bit.ly/broken-link",
-      };
-      setName(product.name);
-      setCategory(product.category);
-      setPrice(product.price);
-      setQuantity(product.quantity);
-      setImage(product.image);
+    const getProduct = async () => {
+      try {
+        const data = await fetchProductById(id);
+        if (data) {
+          setProduct(data);
+          setName(data.name || "");
+          setCategory(data.category_id || "");
+          setPrice(data.price || "");
+          setSellPrice(data.sell_price || "");
+          setDescription(data.description || "");
+          setStatus(data.status || "");
+          setImage(data.image || "");
+        }
+      } catch (error) {
+        toast({
+          title: "Error fetching product.",
+          description: "Failed to fetch product details.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        console.error("Failed to fetch product:", error);
+      }
     };
-    fetchProduct();
-  }, [id]);
 
-  const validateForm = () => {
-    const newErrors = {};
+    const getCategories = async () => {
+      try {
+        const categoriesData = await fetchCategories();
+        if (categoriesData) {
+          setCategories(categoriesData);
+        }
+      } catch (error) {
+        toast({
+          title: "Error fetching categories.",
+          description: "Failed to fetch categories.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        console.error("Failed to fetch categories:", error);
+      }
+    };
 
-    if (!name) newErrors.name = "Tên sản phẩm là bắt buộc.";
-    if (!category) newErrors.category = "Loại sản phẩm là bắt buộc.";
-    if (!price || isNaN(price)) newErrors.price = "Giá là bắt buộc và phải là số.";
-    if (!quantity || isNaN(quantity)) newErrors.quantity = "Số lượng là bắt buộc và phải là số.";
-    if (!image) newErrors.image = "Ảnh sản phẩm là bắt buộc.";
-
-    return newErrors;
-  };
-
-  const handleSubmit = (e) => {
+    getProduct();
+    getCategories();
+  }, [id, toast]);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = validateForm();
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-    } else {
-      setErrors({});
-      
-      // Logic to update the product (e.g., API call)
-
-      // Simulate a successful update with a toast notification
+  
+    if (!category) {
       toast({
-        title: "Product updated.",
-        description: "The product has been updated successfully.",
-        status: "success",
-        duration: 9000,
+        title: "Validation Error",
+        description: "Please select a category.",
+        status: "error",
+        duration: 5000,
         isClosable: true,
       });
-
-      // Redirect to the products list or other desired location
+      return;
+    }
+  
+    let imageUrl = image;
+  
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("file", imageFile);
+  
+      try {
+        const response = await axios.post(`http://localhost:3000/api/upload/products`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        imageUrl = response.data.filePath;
+      } catch (error) {
+        toast({
+          title: "Image Upload Error",
+          description: "Failed to upload image.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+    }
+  
+    // Now update the product with the productData object
+    try {
+      const productData = { name, price, sell_price, description, image: imageUrl, status, category_id: category };
+      await updateProduct(id, productData);
+      toast({
+        title: "Product updated.",
+        description: "Product details have been updated successfully.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
       navigate("/admin/products");
+    } catch (error) {
+      console.error("Update error:", error);
+      toast({
+        title: "Error updating product.",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
-
-  const handleCancel = (e) => {
-    e.preventDefault();
-    navigate("/admin/products");
+  
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]);
   };
+
+  
+  if (!product) return <p>Loading...</p>;
 
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md" fontFamily="math">
-      <Heading mb={5}>Sửa thông tin</Heading>
       <form onSubmit={handleSubmit}>
-        <FormControl id="name" mb={4} isInvalid={errors.name}>
-          <FormLabel>Tên sản phẩm </FormLabel>
+        <FormControl mb={4}>
+          <FormLabel>Tên sản phẩm</FormLabel>
           <Input
-            type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            placeholder="Tên sản phẩm"
+            required
           />
-          {errors.name && <FormErrorMessage>{errors.name}</FormErrorMessage>}
         </FormControl>
-        <FormControl id="category" mb={4} isInvalid={errors.category}>
+        <FormControl mb={4}>
           <FormLabel>Loại sản phẩm</FormLabel>
-          <Input
-            type="text"
+          <Select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-          />
-          {errors.category && <FormErrorMessage>{errors.category}</FormErrorMessage>}
+            placeholder="Chọn loại sản phẩm"
+            required
+          >
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </Select>
         </FormControl>
-        <FormControl id="price" mb={4} isInvalid={errors.price}>
+        <FormControl mb={4}>
           <FormLabel>Giá</FormLabel>
           <Input
-            type="text"
+            type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            placeholder="Giá"
+            required
           />
-          {errors.price && <FormErrorMessage>{errors.price}</FormErrorMessage>}
         </FormControl>
-        <FormControl id="stock" mb={4} isInvalid={errors.quantity}>
-          <FormLabel>Số lượng</FormLabel>
+        <FormControl mb={4}>
+          <FormLabel>Giảm giá</FormLabel>
           <Input
-            type="text"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            type="number"
+            value={sell_price}
+            onChange={(e) => setSellPrice(e.target.value)}
+            placeholder="Giảm giá"
+            required
           />
-          {errors.quantity && <FormErrorMessage>{errors.quantity}</FormErrorMessage>}
         </FormControl>
-        <FormControl id="image" mb={4} isInvalid={errors.image}>
-          <FormLabel>Ảnh sản phẩm</FormLabel>
+        <FormControl mb={4}>
+          <FormLabel>Trạng thái</FormLabel>
           <Input
-            type="text"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            placeholder="trạng thái"
           />
-          {errors.image && <FormErrorMessage>{errors.image}</FormErrorMessage>}
         </FormControl>
-        <Button colorScheme="teal" type="submit" mr="10px">
-          Đồng ý
-        </Button>
-        <Button colorScheme="gray" onClick={handleCancel}>
-          Hủy
+        <FormControl mb={4}>
+          <FormLabel>Hình ảnh</FormLabel>
+          <Input type="file" onChange={handleImageChange} />
+        </FormControl>
+        <Button type="submit" colorScheme="blue">
+          Cập nhật sản phẩm
         </Button>
       </form>
     </Box>

@@ -10,7 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
-import { HomeIcon, ProfileIcon, BagIcon, InvoiceIcon } from "../../../components/icon/icon";
+import CategoryIcon, { HomeIcon, ProfileIcon, BagIcon, InvoiceIcon } from "../../../components/icon/icon";
 
 // Placeholder user data
 const user = {
@@ -80,6 +80,30 @@ const Sidebar = () => {
                   leftIcon={<HomeIcon boxSize={5} color={isActive ? activeColor : linkColor} />}
                 >
                   Tổng kết
+                </Button>
+              )}
+            </NavLink>
+            <NavLink to="/admin/category">
+              {({ isActive }) => (
+                <Button
+                  fontFamily="math"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  bg={isActive ? activeBg : "inherit"}
+                  color={isActive ? activeColor : linkColor}
+                  fontWeight={isActive ? "bold" : "normal"}
+                  _hover={{ bg: activeBg, textDecoration: "none" }}
+                  _active={{ bg: activeBg, color: activeColor }}
+                  mb="0.5px"
+                  mx="auto"
+                  ps="16px"
+                  py="12px"
+                  borderRadius="15px"
+                  w="100%"
+                  height="50px"
+                  leftIcon={<CategoryIcon boxSize={5} color={isActive ? activeColor : linkColor} />}
+                >
+                  Danh mục
                 </Button>
               )}
             </NavLink>

@@ -1,5 +1,7 @@
 const express = require("express");
+const multer = require('multer');
 const router = express.Router();
+
 const userController = require("../controllers/userController");
 const productController = require("../controllers/productController");
 const categoryController = require("../controllers/categoryController");
@@ -30,6 +32,33 @@ router.post("/orders", orderController.PostOrders);
 router.get("/order_detail", order_detailController.getAllOrder_detail);
 
 // Authentication
+
+// Define storage for multer
+// User routes
+router.get("/users", userController.getAllUsers);
+router.get("/users/:id", userController.getUserById);
+// router.post("/users", userController.createUser);
+router.put("/users/:id", userController.updateUser);
+router.delete("/users/:id", userController.deleteUser);
+
+// Product routes
+router.get("/products", productController.getAllProducts);
+router.get("/products/:id", productController.getProductById);
+// router.post('/products', productController.postProduct);
+router.put("/products/:id", productController.updateProduct);
+router.delete("/products/:id", productController.deleteProduct);
+
+// Category routes
+router.get("/categories", categoryController.getAllcategoris);
+router.get("/categories/:id", categoryController.getCategoryById);
+// router.post("/categories", categoryController.createUser);
+router.put("/categories/:id", categoryController.updateCategory);
+router.delete("/categories/:id", categoryController.deleteCategory);
+// Order routes
+router.get("/orders", orderController.getAllOrders);
+
+// Order detail routes
+router.get("/order_detail", order_detailController.getAllOrder_detail);
 
 
 module.exports = router;
