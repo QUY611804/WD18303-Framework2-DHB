@@ -1,9 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./Navbar.css";
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './Navbar.css';
 import logo from "../../../../src/assets/logoo.png"; // Đường dẫn mới
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const username = localStorage.getItem('username');
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    navigate('/signin'); // Chuyển hướng đến trang đăng nhập
+  };
+
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo">
@@ -19,7 +28,14 @@ const Navbar = () => {
         <Link to="/cart" className="cart-link">
           <i className="fas fa-shopping-cart"></i> Giỏ hàng
         </Link>
-        <Link to="/signin">Đăng nhập</Link>
+        {username ? (
+          <>
+            <span className="navbar-username">{username}</span>
+            <button className="logout-button" onClick={handleLogout}>Đăng xuất</button>
+          </>
+        ) : (
+          <Link to="/signin">Đăng nhập</Link>
+        )}
       </div>
     </nav>
   );

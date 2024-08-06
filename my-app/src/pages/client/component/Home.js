@@ -1,59 +1,81 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import ImageSlider from '../component/ImageSlider';
 import './Home.css';
 
-const featuredProducts = [
-  { id: 1, name: 'Sản phẩm 1', imgSrc: '/assets/noibat1.jpg', price: '200.000 VNĐ' },
-  { id: 2, name: 'Sản phẩm 2', imgSrc: '/assets/noibat2.jpg', price: '300.000 VNĐ' },
-  { id: 3, name: 'Sản phẩm 3', imgSrc: '/assets/noibat3.jpg', price: '150.000 VNĐ' },
-];
-
-const bestSellingProducts = [
-  { id: 1, name: 'Sản phẩm A', imgSrc: '/assets/banchay1.jpg', price: '250.000 VNĐ' },
-  { id: 2, name: 'Sản phẩm B', imgSrc: '/assets/banchay2.jpg', price: '350.000 VNĐ' },
-  { id: 3, name: 'Sản phẩm C', imgSrc: '/assets/banchay3.jpg', price: '180.000 VNĐ' },
-];
-
 const Home = () => {
-    return (
-      <div className="home">
-        <ImageSlider />
-        <section className="featured-products">
-          <h2>Sản phẩm nổi bật</h2>
-          <div className="product-list">
-            {featuredProducts.map(product => (
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [bestSellingProducts, setBestSellingProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const [featuredResponse, bestSellingResponse] = await Promise.all([
+          axios.get('http://localhost:3000/api/products_noibat'), // Đường dẫn API cho sản phẩm nổi bật
+          axios.get('http://localhost:3000/api/products_banchay') // Đường dẫn API cho sản phẩm bán chạy
+        ]);
+        setFeaturedProducts(featuredResponse.data);
+        setBestSellingProducts(bestSellingResponse.data);
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu từ API', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return <div>Đang tải...</div>;
+  }
+
+  return (
+    <div className="home">
+      <ImageSlider />
+      <section className="featured-products">
+        <h2>Sản phẩm nổi bật</h2>
+        <div className="product-list">
+          {featuredProducts.length > 0 ? (
+            featuredProducts.map(product => (
               <div className="product-item" key={product.id}>
-                <img src={product.imgSrc} alt={product.name} className="product-image" />
+                <img src={product.image} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
                 <p className="product-price">{product.price}</p>
                 <div className="product-buttons">
-                  
                   <Link to={`/product/${product.id}`} className="details-button">Chi tiết</Link>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
-  
-        <section className="best-selling-products">
-          <h2>Sản phẩm bán chạy</h2>
-          <div className="product-list">
-            {bestSellingProducts.map(product => (
+            ))
+          ) : (
+            <p>Không có sản phẩm nổi bật</p>
+          )}
+        </div>
+      </section>
+
+      <section className="best-selling-products">
+        <h2>Sản phẩm bán chạy</h2>
+        <div className="product-list">
+          {bestSellingProducts.length > 0 ? (
+            bestSellingProducts.map(product => (
               <div className="product-item" key={product.id}>
-                <img src={product.imgSrc} alt={product.name} className="product-image" />
+                <img src={product.image} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
                 <p className="product-price">{product.price}</p>
                 <div className="product-buttons">
-                  
                   <Link to={`/product/${product.id}`} className="details-button">Chi tiết</Link>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
-      </div>
-    );
+            ))
+          ) : (
+            <p>Không có sản phẩm bán chạy</p>
+          )}
+        </div>
+      </section>
+    </div>
+  );
 };
 
 export default Home;

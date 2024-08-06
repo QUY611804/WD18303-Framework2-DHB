@@ -10,7 +10,7 @@ import Footer from '../pages/client/component/Footer';
 import Navbar from '../pages/client/component/Navbar';
 import ProductDetails from '../pages/client/component/ProductDetails';
 import Cart from '../pages/client/component/Cart';
-
+import CheckoutForm from '../pages/client/component/CheckoutForm';
 const ClientRoutes = () => {
   return (
     <>
@@ -24,6 +24,7 @@ const ClientRoutes = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/formcheckout" element={<CheckoutForm />} />
       </Routes>
       <Footer />
     </>

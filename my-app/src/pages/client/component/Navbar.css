@@ -53,3 +53,20 @@
 .navbar-auth a:hover {
   text-decoration: underline; /* Thêm gạch chân khi di chuột qua liên kết */
 }
+
+.navbar-username {
+  color: #fff; /* Màu chữ của tên đăng nhập */
+  margin-right: 10px; /* Khoảng cách giữa tên đăng nhập và nút đăng xuất */
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: #fff; /* Màu chữ của nút đăng xuất */
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.logout-button:hover {
+  text-decoration: underline; /* Thêm gạch chân khi di chuột qua nút đăng xuất */
+}

@@ -1,31 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProductDetails.css';
 
-const products = [
-  { id: 1, name: 'Sản phẩm 1', imgSrc: '/assets/noibat1.jpg', price: '200.000 VNĐ', description: 'Mô tả chi tiết sản phẩm 1' },
-  { id: 2, name: 'Sản phẩm 2', imgSrc: '/assets/noibat2.jpg', price: '300.000 VNĐ', description: 'Mô tả chi tiết sản phẩm 2' },
-  { id: 3, name: 'Sản phẩm 3', imgSrc: '/assets/noibat3.jpg', price: '150.000 VNĐ', description: 'Mô tả chi tiết sản phẩm 3' },
-  { id: 4, name: 'Sản phẩm A', imgSrc: '/assets/banchay1.jpg', price: '250.000 VNĐ', description: 'Mô tả chi tiết sản phẩm A' },
-  { id: 5, name: 'Sản phẩm B', imgSrc: '/assets/banchay2.jpg', price: '350.000 VNĐ', description: 'Mô tả chi tiết sản phẩm B' },
-  { id: 6, name: 'Sản phẩm C', imgSrc: '/assets/banchay3.jpg', price: '180.000 VNĐ', description: 'Mô tả chi tiết sản phẩm C' },
-];
-
 const ProductDetails = () => {
   const { id } = useParams();
-  const product = products.find(p => p.id === parseInt(id));
+  const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/products/${id}`)
+      .then(response => response.json())
+      .then(data => setProduct(data))
+      .catch(error => console.error('Error fetching product details:', error));
+  }, [id]);
+
+  const increaseQuantity = () => {
+    setQuantity(prevQuantity => prevQuantity + 1);
+  };
+
+  const decreaseQuantity = () => {
+    setQuantity(prevQuantity => Math.max(prevQuantity - 1, 1));
+  };
+
+  const addToCart = () => {
+    if (product) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingProductIndex = cart.findIndex(item => item.id === product.id);
+      if (existingProductIndex !== -1) {
+        cart[existingProductIndex].quantity += quantity;
+      } else {
+        cart.push({ ...product, quantity });
+      }
+      localStorage.setItem('cart', JSON.stringify(cart));//lưu vào localStorage
+      alert('Sản phẩm đã được thêm vào giỏ hàng!');
+    }
+  };
 
   if (!product) {
-    return <div>Sản phẩm không tồn tại</div>;
+    return <div>Đang tải dữ liệu...</div>;
   }
 
   return (
     <div className="product-details">
-      <img src={product.imgSrc} alt={product.name} className="product-image" />
-      <h1>{product.name}</h1>
-      <p className="product-price">{product.price}</p>
-      <p className="product-description">{product.description}</p>
-      <button className="buy-button">Mua hàng</button>
+      <img src={product.image} alt={product.name} className="product-image" />
+      <div className="product-info">
+        <h1 className="product-name">{product.name}</h1>
+        <p className="product-price">{product.price_difference}</p>
+        <p className="product-description">{product.description}</p>
+        <div className="quantity-controls">
+          <h4>Số lượng:</h4>
+          <div className="quantity-wrapper">
+            <button onClick={decreaseQuantity} className="quantity-button">-</button>
+            <span className="quantity">{quantity}</span>
+            <button onClick={increaseQuantity} className="quantity-button">+</button>
+          </div>
+        </div>
+        <button className="buy-button" onClick={addToCart}>Mua hàng</button>
+      </div>
     </div>
   );
 };

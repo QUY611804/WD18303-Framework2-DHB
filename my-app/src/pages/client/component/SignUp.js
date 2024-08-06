@@ -1,16 +1,68 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './SignUp.css';
 
 const SignUp = () => {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate(); // Hook for navigation
+
+  const validateForm = () => {
+    if (!username.trim()) {
+      return 'Tên đăng nhập không được bỏ trống.';
+    }
+    if (!email.trim()) {
+      return 'Email không được bỏ trống.';
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return 'Email không hợp lệ.';
+    }
+    if (password.length < 6) {
+      return 'Mật khẩu phải ít nhất 6 ký tự.';
+    }
+    if (password !== confirmPassword) {
+      return 'Mật khẩu xác thực không khớp.';
+    }
+    return '';
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Xử lý đăng ký tại đây
+
+    // Validate form data
+    const formError = validateForm();
+    if (formError) {
+      setError(formError);
+      return;
+    }
+
+    // Submit registration data
+    fetch('http://localhost:3000/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, email, password })
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.json().then(data => {
+          throw new Error(data.message || 'Đăng ký không thành công');
+        });
+      }
+      return response.json();
+    })
+    .then(data => {
+      alert(data.message || 'Đăng ký thành công!');
+      navigate('/signin'); // Chuyển hướng đến trang đăng nhập
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      setError(error.message || 'Có lỗi xảy ra');
+    });
   };
 
   return (
@@ -20,22 +72,12 @@ const SignUp = () => {
       </header>
       <section className="signup-form">
         <form onSubmit={handleSubmit}>
-          <label htmlFor="name">Tên:</label>
+          <label htmlFor="username">Tên đăng nhập:</label>
           <input
             type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-
-          <label htmlFor="phone">Số điện thoại:</label>
-          <input
-            type="tel"
-            id="phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
 
           <label htmlFor="email">Email:</label>
@@ -44,7 +86,6 @@ const SignUp = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
 
           <label htmlFor="password">Mật khẩu:</label>
@@ -53,7 +94,6 @@ const SignUp = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
 
           <label htmlFor="confirm-password">Xác thực mật khẩu:</label>
@@ -62,10 +102,11 @@ const SignUp = () => {
             id="confirm-password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            required
           />
 
           <button type="submit">Đăng ký</button>
+
+          {error && <p className="error-message">{error}</p>}
 
           <p className="signin-link">
             Đã có tài khoản? <a href="/signin">Đăng nhập</a>
