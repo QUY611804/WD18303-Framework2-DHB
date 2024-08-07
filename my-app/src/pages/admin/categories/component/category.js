@@ -105,7 +105,7 @@ const CategoryPage = () => {
               <Td>{category.id}</Td>
               <Td>{category.name}</Td>
               <Td>
-                <Link to={`admin/Category/edit/${category.id}`}>
+<Link to={`admin/Category/edit/${category.id}`}>
                   <Button colorScheme="blue" size="sm" mr={2}>
                     Sửa
                   </Button>

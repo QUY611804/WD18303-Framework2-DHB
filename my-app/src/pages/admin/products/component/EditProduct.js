@@ -8,11 +8,12 @@ import {
   Button,
   Select,
   useToast,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import {
   fetchProductById,
   updateProduct,
-} from "../../../../service/api/products"; 
+} from "../../../../service/api/products";
 import { fetchCategories } from "../../../../service/api/Category";
 import axios from "axios";
 
@@ -24,9 +25,10 @@ const EditProduct = () => {
   const [sell_price, setSellPrice] = useState("");
   const [status, setStatus] = useState("");
   const [image, setImage] = useState("");
-  const [imageFile, setImageFile] = useState(null); 
+  const [imageFile, setImageFile] = useState(null);
   const [categories, setCategories] = useState([]);
   const [description, setDescription] = useState("");
+  const [errors, setErrors] = useState({});
   const toast = useToast();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -95,24 +97,21 @@ const EditProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!category) {
-      toast({
-        title: "Validation Error",
-        description: "Please select a category.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+const newErrors = validateForm();
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
+    } else {
+      setErrors({});
     }
-  
+
     let imageUrl = image;
-  
+
     if (imageFile) {
       const formData = new FormData();
       formData.append("file", imageFile);
-  
+
       try {
         const response = await axios.post(
           `http://localhost:3000/api/upload/products`,
@@ -135,10 +134,18 @@ const EditProduct = () => {
         return;
       }
     }
-  
-    // Now update the product with the productData object
+
+    const productData = {
+      name,
+      price,
+      sell_price,
+      description,
+      image: imageUrl,
+      status,
+      category_id: category,
+    };
+
     try {
-      const productData = { name, price, sell_price, description, image: imageUrl, status, category_id: category };
       await updateProduct(id, productData);
       toast({
         title: "Product updated.",
@@ -159,27 +166,22 @@ const EditProduct = () => {
       });
     }
   };
-  
+
   const handleImageChange = (e) => {
     setImageFile(e.target.files[0]);
   };
 
-  
   if (!product) return <p>Loading...</p>;
 
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md" fontFamily="math">
       <form onSubmit={handleSubmit}>
-        <FormControl mb={4}>
+        <FormControl id="name" mb={4} isInvalid={errors.name}>
           <FormLabel>Tên sản phẩm</FormLabel>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Tên sản phẩm"
-            required
-          />
+          <Input value={name} onChange={(e) => setName(e.target.value)} />
+          {errors.name && <FormErrorMessage>{errors.name}</FormErrorMessage>}
         </FormControl>
-        <FormControl mb={4}>
+        <FormControl id="category" mb={4} isInvalid={errors.category}>
           <FormLabel>Loại sản phẩm</FormLabel>
           <Select
             value={category}
@@ -196,24 +198,21 @@ const EditProduct = () => {
             <FormErrorMessage>{errors.category}</FormErrorMessage>
           )}
         </FormControl>
-        <FormControl mb={4}>
+        <FormControl id="price" mb={4} isInvalid={errors.price}>
           <FormLabel>Giá</FormLabel>
           <Input
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            placeholder="Giá"
-            required
           />
+{errors.price && <FormErrorMessage>{errors.price}</FormErrorMessage>}
         </FormControl>
-        <FormControl mb={4}>
-          <FormLabel>Giảm giá</FormLabel>
+        <FormControl id="sell_price" mb={4} isInvalid={errors.sell_price}>
+          <FormLabel>Giá bán</FormLabel>
           <Input
             type="number"
             value={sell_price}
             onChange={(e) => setSellPrice(e.target.value)}
-            placeholder="Giảm giá"
-            required
           />
           {errors.sell_price && (
             <FormErrorMessage>{errors.sell_price}</FormErrorMessage>
@@ -236,12 +235,13 @@ const EditProduct = () => {
             <FormErrorMessage>{errors.status}</FormErrorMessage>
           )}
         </FormControl>
-        <FormControl mb={4}>
-          <FormLabel>Hình ảnh</FormLabel>
+        <FormControl id="image" mb={4} isInvalid={errors.image}>
+          <FormLabel>Ảnh sản phẩm</FormLabel>
           <Input type="file" onChange={handleImageChange} />
+          {errors.image && <FormErrorMessage>{errors.image}</FormErrorMessage>}
         </FormControl>
         <Button type="submit" colorScheme="blue">
-          Cập nhật sản phẩm
+          Đồng ý
         </Button>
       </form>
     </Box>

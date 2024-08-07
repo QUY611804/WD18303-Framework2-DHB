@@ -16,7 +16,6 @@ import {
 } from "../../../../service/api/Category";
 
 const EditCategory = () => {
-  const [category, setCategory] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({});
@@ -27,7 +26,6 @@ const EditCategory = () => {
   const validate = () => {
     const newErrors = {};
     if (!name) newErrors.name = "Tên thương hiệu là bắt buộc.";
-    if (!description) newErrors.description = "Mô tả là bắt buộc.";
     return newErrors;
   };
 
@@ -36,7 +34,6 @@ const EditCategory = () => {
       try {
         const data = await fetchCategoriesById(id);
         if (data) {
-          setCategory(data);
           setName(data.name || "");
           setDescription(data.description || "");
         }
@@ -62,7 +59,7 @@ const EditCategory = () => {
       return;
     }
 
-    const categoryData = { name, description };
+    const categoryData = { name };
 
     try {
       await updateCategory(id, categoryData);
@@ -93,18 +90,20 @@ const EditCategory = () => {
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md" fontFamily="math">
       <Heading mb={5}>Sửa thông tin thương hiệu</Heading>
-      <FormControl id="name" mb={4} isInvalid={errors.name}>
-        <FormLabel>Tên thương hiệu</FormLabel>
-        <Input value={name} onChange={(e) => setName(e.target.value)} />
-        <FormErrorMessage>{errors.name}</FormErrorMessage>
-      </FormControl>
-     
-      <Button colorScheme="teal" mr="10px" onClick={handleSubmit}>
-        Đồng ý
-      </Button>
-      <Button colorScheme="gray" onClick={handleCancel}>
-        Hủy
-      </Button>
+      <form onSubmit={handleSubmit}>
+        <FormControl id="name" mb={4} isInvalid={errors.name}>
+          <FormLabel>Tên thương hiệu</FormLabel>
+          <Input value={name} onChange={(e) => setName(e.target.value)} />
+          {errors.name && <FormErrorMessage>{errors.name}</FormErrorMessage>}
+        </FormControl>
+       
+        <Button colorScheme="teal" mr="10px" type="submit">
+          Đồng ý
+        </Button>
+        <Button colorScheme="gray" onClick={handleCancel}>
+          Hủy
+        </Button>
+      </form>
     </Box>
   );
 };

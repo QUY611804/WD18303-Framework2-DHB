@@ -51,7 +51,7 @@ router.delete("/products/:id", productController.deleteProduct);
 // Category routes
 router.get("/categories", categoryController.getAllcategoris);
 router.get("/categories/:id", categoryController.getCategoryById);
-// router.post("/categories", categoryController.createUser);
+router.post("/categories", categoryController.postCategory);
 router.put("/categories/:id", categoryController.updateCategory);
 router.delete("/categories/:id", categoryController.deleteCategory);
 // Order routes

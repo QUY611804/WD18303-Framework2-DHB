@@ -104,7 +104,7 @@ exports.postCategory = (req, res) => {
 
   // Prepare the SQL query
   const query = `
-    INSERT INTO categories (name)
+INSERT INTO categories (name)
     VALUES (?);
   `;
   const values = [name || '']; // Use empty string if description is not provided
