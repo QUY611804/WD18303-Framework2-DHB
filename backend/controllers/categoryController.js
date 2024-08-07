@@ -89,3 +89,34 @@ exports.updateCategory = (req, res) => {
     res.status(200).json({ message: "category updated successfully" });
   });
 };
+
+
+
+
+
+exports.postCategory = (req, res) => {
+  const { name } = req.body;
+
+  // Validate input
+  if (!name) {
+    return res.status(400).json({ message: 'Name is required' });
+  }
+
+  // Prepare the SQL query
+  const query = `
+    INSERT INTO categories (name)
+    VALUES (?);
+  `;
+  const values = [name || '']; // Use empty string if description is not provided
+
+  // Execute the query
+  connection.query(query, values, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(201).json({
+      message: 'Category created successfully',
+      categoryId: results.insertId // Return the ID of the newly created category
+    });
+  });
+};

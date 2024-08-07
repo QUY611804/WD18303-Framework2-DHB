@@ -9,7 +9,9 @@ import {
   Heading,
   useToast,
   FormErrorMessage,
+  Select,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 const AddUser = () => {
   const [name, setName] = useState("");
@@ -17,6 +19,7 @@ const AddUser = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [image, setImage] = useState(null);
+  const [role, setRole] = useState("user");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const toast = useToast();
@@ -33,30 +36,48 @@ const AddUser = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
     if (Object.keys(newErrors).length === 0) {
-      // Add logic to save the user (e.g., API call)
-      console.log({
-        name,
-        email,
-        password,
-        phone,
-        image,
-      });
+      try {
+        // Add logic to save the user (e.g., API call)
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("phone", phone);
+        formData.append("image", image);
+        formData.append("role", role);
 
-      // Simulate a successful save with a toast notification
-      toast({
-        title: "User added.",
-        description: "The user has been added successfully.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
+        // Assuming there's an API endpoint for adding users
+        await axios.post("http://localhost:3000/api/users", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-      // Redirect to the user list page
-      navigate("/admin/user");
+        // Simulate a successful save with a toast notification
+        toast({
+          title: "User added.",
+          description: "The user has been added successfully.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+
+        // Redirect to the user list page
+        navigate("/admin/user");
+      } catch (error) {
+        console.error("Error adding user:", error);
+        toast({
+          title: "Error adding user.",
+          description: error.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     } else {
       setErrors(newErrors);
     }
@@ -122,6 +143,13 @@ const AddUser = () => {
             onChange={handleImageChange}
           />
           <FormErrorMessage>{errors.image}</FormErrorMessage>
+        </FormControl>
+        <FormControl id="role" mb={4}>
+          <FormLabel>Role</FormLabel>
+          <Select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </Select>
         </FormControl>
         <Button colorScheme="teal" type="submit" mr="10px">
           Thêm

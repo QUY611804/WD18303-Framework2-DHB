@@ -52,3 +52,15 @@ export const fetchUserById = async (id) => {
     throw error;
   }
 };
+
+
+
+export const addUser = async (userData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/users`, userData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+

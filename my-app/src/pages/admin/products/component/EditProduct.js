@@ -78,6 +78,21 @@ const EditProduct = () => {
     getProduct();
     getCategories();
   }, [id, toast]);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!name) newErrors.name = "Tên sản phẩm là bắt buộc.";
+    if (!category) newErrors.category = "Loại sản phẩm là bắt buộc.";
+    if (!price || isNaN(price))
+      newErrors.price = "Giá là bắt buộc và phải là số.";
+    if (!sell_price || isNaN(sell_price))
+      newErrors.sell_price = "Giá bán là bắt buộc và phải là số.";
+    if (!image) newErrors.image = "Ảnh sản phẩm là bắt buộc.";
+
+    return newErrors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -99,11 +114,15 @@ const EditProduct = () => {
       formData.append("file", imageFile);
   
       try {
-        const response = await axios.post(`http://localhost:3000/api/upload/products`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await axios.post(
+          `http://localhost:3000/api/upload/products`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         imageUrl = response.data.filePath;
       } catch (error) {
         toast({
@@ -165,15 +184,17 @@ const EditProduct = () => {
           <Select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            placeholder="Chọn loại sản phẩm"
-            required
           >
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
+            <option value="">Chọn loại sản phẩm</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
               </option>
             ))}
           </Select>
+          {errors.category && (
+            <FormErrorMessage>{errors.category}</FormErrorMessage>
+          )}
         </FormControl>
         <FormControl mb={4}>
           <FormLabel>Giá</FormLabel>
@@ -194,14 +215,26 @@ const EditProduct = () => {
             placeholder="Giảm giá"
             required
           />
+          {errors.sell_price && (
+            <FormErrorMessage>{errors.sell_price}</FormErrorMessage>
+          )}
         </FormControl>
-        <FormControl mb={4}>
-          <FormLabel>Trạng thái</FormLabel>
+        <FormControl id="description" mb={4} isInvalid={errors.description}>
+          <FormLabel>Mô tả</FormLabel>
           <Input
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            placeholder="trạng thái"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
+          {errors.description && (
+            <FormErrorMessage>{errors.description}</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl id="status" mb={4} isInvalid={errors.status}>
+          <FormLabel>Trạng thái</FormLabel>
+          <Input value={status} onChange={(e) => setStatus(e.target.value)} />
+          {errors.status && (
+            <FormErrorMessage>{errors.status}</FormErrorMessage>
+          )}
         </FormControl>
         <FormControl mb={4}>
           <FormLabel>Hình ảnh</FormLabel>

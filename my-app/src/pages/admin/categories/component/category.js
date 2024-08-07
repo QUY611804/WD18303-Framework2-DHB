@@ -80,7 +80,7 @@ const CategoryPage = () => {
         <Text fontSize="2xl" fontWeight="bold">
           
         </Text>
-        <Link to="categories/add">
+        <Link to="admin/categories/add">
           <Button
             bg="#1ba43b"
             color="white"

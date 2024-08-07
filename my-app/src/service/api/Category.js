@@ -49,3 +49,18 @@ export const deleteCategory = async (id) => {
     throw error;
   }
 };
+
+export const addCategory = async (categoryData) => {
+  // Replace with your API endpoint and method to add a category
+  const response = await fetch(`${BASE_URL}/categories`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(categoryData),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to add category");
+  }
+  return response.json();
+};

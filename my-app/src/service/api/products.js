@@ -1,6 +1,8 @@
 import axios from "axios";
 import request from "../../config/ApiConfig";
 
+
+
 const BASE_URL = "http://localhost:3000/api";
 
 export const fetchProducts = async () => {
@@ -22,28 +24,24 @@ export const fetchProductById = async (id) => {
   }
 };
 
-export const addProduct = async (formData) => {
-  try {
-    // Log FormData contents for debugging
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
+// export const addProduct = async (formData) => {
+//   try {
 
-    const response = await axios.post(`${BASE_URL}/products`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+//     const response = await axios.post(`${BASE_URL}/products`, formData, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
 
-    return response.data;
-  } catch (error) {
-    console.error(
-      "Error adding product:",
-      error.response?.data || error.message
-    );
-    throw error;
-  }
-};
+//     return response.data;
+//   } catch (error) {
+//     console.error(
+//       "Error adding product:",
+//       error.response?.data || error.message
+//     );
+//     throw error;
+//   }
+// };
 
 export const updateProduct = async (id, productData) => {
   try {
@@ -77,3 +75,16 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 };
+
+
+
+
+export const addProduct = async (productData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/products`, productData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
