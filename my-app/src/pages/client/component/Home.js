@@ -4,6 +4,8 @@ import axios from 'axios';
 import ImageSlider from '../component/ImageSlider';
 import './Home.css';
 
+const BASE_URL = 'http://localhost:3000'; // Adjust this if needed based on your API
+
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [bestSellingProducts, setBestSellingProducts] = useState([]);
@@ -13,8 +15,8 @@ const Home = () => {
     const fetchProducts = async () => {
       try {
         const [featuredResponse, bestSellingResponse] = await Promise.all([
-          axios.get('http://localhost:3000/api/products_noibat'), // Đường dẫn API cho sản phẩm nổi bật
-          axios.get('http://localhost:3000/api/products_banchay') // Đường dẫn API cho sản phẩm bán chạy
+          axios.get(`${BASE_URL}/api/products_noibat`),
+          axios.get(`${BASE_URL}/api/products_banchay`)
         ]);
         setFeaturedProducts(featuredResponse.data);
         setBestSellingProducts(bestSellingResponse.data);
@@ -41,7 +43,7 @@ const Home = () => {
           {featuredProducts.length > 0 ? (
             featuredProducts.map(product => (
               <div className="product-item" key={product.id}>
-                <img src={product.image} alt={product.name} className="product-image" />
+                <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
                 <p className="product-price">{product.price}</p>
                 <div className="product-buttons">
@@ -61,7 +63,7 @@ const Home = () => {
           {bestSellingProducts.length > 0 ? (
             bestSellingProducts.map(product => (
               <div className="product-item" key={product.id}>
-                <img src={product.image} alt={product.name} className="product-image" />
+                <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
                 <p className="product-price">{product.price}</p>
                 <div className="product-buttons">

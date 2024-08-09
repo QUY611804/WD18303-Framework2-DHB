@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './Cart.css';
-import CheckoutForm from './CheckoutForm'; // Import component CheckoutForm
+import CheckoutForm from './CheckoutForm';
+
+const BASE_URL = 'http://localhost:3000'; // Cập nhật đúng URL của server
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
-  const username = localStorage.getItem('username'); // Use 'username' instead of 'userId'
+  const username = localStorage.getItem('username');
 
   useEffect(() => {
-    // Lấy giỏ hàng từ localStorage
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     setCart(storedCart);
   }, []);
@@ -37,14 +38,13 @@ const Cart = () => {
 
   const getTotal = () => {
     return cart.reduce((total, item) => {
-      // Ensure price is treated as a number
-      const price = typeof item.price_difference === 'string' ? parseFloat(item.price_difference.replace(/[^0-9.-]+/g, '')) : parseFloat(item.price_difference);
+      const price = typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.-]+/g, '')) : parseFloat(item.price);
       return total + (item.quantity * (price || 0));
     }, 0);
   };
 
   const handleCheckout = () => {
-    if (!username) { // Check if username exists
+    if (!username) {
       alert('Vui lòng đăng nhập trước khi thanh toán.');
       return;
     }
@@ -61,10 +61,10 @@ const Cart = () => {
       <ul>
         {cart.map(item => (
           <li key={item.id} className="cart-item">
-            <img src={item.image} alt={item.name} className="cart-item-image" />
+            <img src={`${BASE_URL}/${item.image}`} alt={item.name} className="cart-item-image" />
             <div className="cart-item-info">
               <h2>{item.name}</h2>
-              <p className="cart-item-price">Giá: {item.price_difference}</p>
+              <p className="cart-item-price">Giá: {item.price} VNĐ</p>
               <div className="quantity-controls">
                 <h4>Số lượng:</h4>
                 <button onClick={() => decreaseQuantity(item.id)} className="quantity-button">-</button>
@@ -72,6 +72,7 @@ const Cart = () => {
                 <button onClick={() => increaseQuantity(item.id)} className="quantity-button">+</button>
               </div>
               <button className="remove-button" onClick={() => removeFromCart(item.id)}>Xóa</button>
+              <hr/>
             </div>
           </li>
         ))}
@@ -80,7 +81,7 @@ const Cart = () => {
         <h3>Tổng cộng: {getTotal()} VNĐ</h3>
         <button className="checkout-button" onClick={handleCheckout}>Thanh toán</button>
       </div>
-      {showCheckoutForm && <CheckoutForm username={username} />} {/* Pass username */}
+      {showCheckoutForm && <CheckoutForm username={username} />}
     </div>
   );
 };

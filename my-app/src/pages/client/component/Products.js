@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import ImageSlider from '../component/ImageSlider';
 import './Products.css';
 
+const BASE_URL = 'http://localhost:3000'; // Adjust this if needed based on your API
+
 const Products = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [bestSellingProducts, setBestSellingProducts] = useState([]);
@@ -10,19 +12,19 @@ const Products = () => {
 
   useEffect(() => {
     // Fetch featured products
-    fetch('http://localhost:3000/api/products_noibat')
+    fetch(`${BASE_URL}/api/products_noibat`)
       .then(response => response.json())
       .then(data => setFeaturedProducts(data))
       .catch(error => console.error('Error fetching featured products:', error));
 
     // Fetch best selling products
-    fetch('http://localhost:3000/api/products_banchay')
+    fetch(`${BASE_URL}/api/products_banchay`)
       .then(response => response.json())
       .then(data => setBestSellingProducts(data))
       .catch(error => console.error('Error fetching best selling products:', error));
 
     // Fetch discounted products
-    fetch('http://localhost:3000/api/products_khuyenmai')
+    fetch(`${BASE_URL}/api/products_khuyenmai`)
       .then(response => response.json())
       .then(data => setDiscountedProducts(data))
       .catch(error => console.error('Error fetching discounted products:', error));
@@ -36,7 +38,7 @@ const Products = () => {
         <div className="product-list">
           {featuredProducts.map(product => (
             <div className="product-item" key={product.id}>
-              <img src={product.image} alt={product.name} className="product-image" />
+              <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
               <h3>{product.name}</h3>
               <p className="product-price">{product.price}</p>
               <div className="product-buttons">
@@ -52,7 +54,7 @@ const Products = () => {
         <div className="product-list">
           {bestSellingProducts.map(product => (
             <div className="product-item" key={product.id}>
-              <img src={product.image} alt={product.name} className="product-image" />
+              <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
               <h3>{product.name}</h3>
               <p className="product-price">{product.price}</p>
               <div className="product-buttons">
@@ -68,7 +70,7 @@ const Products = () => {
         <div className="product-list">
           {discountedProducts.map(product => (
             <div className="product-item" key={product.id}>
-              <img src={product.image} alt={product.name} className="product-image" />
+              <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
               <h3>{product.name}</h3>
               <p className="product-price">
                 <span className="old-price">{product.price} VNĐ</span>
