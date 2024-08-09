@@ -30,7 +30,12 @@ router.get("/categories", categoryController.getAllcategoris);
 
 //orders
 router.get("/orders", orderController.getAllOrders);
+router.get('/ordersByName/:name', orderController.orderByName);
+router.get('/orderByName1/:id', orderController.orderByName1);
 router.post("/orders", orderController.PostOrders);
+router.delete('/orders/:id', orderController.deleteOrder);
+router.get('/orders/:id', orderController.getOrderById);
+
 
 //orders_detail
 router.get("/order_detail", order_detailController.getAllOrder_detail);

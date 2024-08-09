@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import './CheckoutForm.css';
 
-const CheckoutForm = ({ username }) => {
+const CheckoutForm = () => {
   const [form, setForm] = useState({
-    name: '',
     phone: '',
     address: '',
     paymentMethod: 'cod', // Mặc định là 'Cash on Delivery'
   });
   const [errors, setErrors] = useState({
-    name: '',
     phone: '',
     address: '',
     paymentMethod: '',
   });
+
+  const username = localStorage.getItem('username'); // Get username from localStorage
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,15 +22,11 @@ const CheckoutForm = ({ username }) => {
 
   const validateForm = () => {
     const newErrors = {
-      name: '',
       phone: '',
       address: '',
       paymentMethod: '',
     };
 
-    if (!form.name.trim()) {
-      newErrors.name = 'Vui lòng nhập họ tên của bạn.';
-    }
     if (!form.phone.trim()) {
       newErrors.phone = 'Vui lòng nhập số điện thoại.';
     }
@@ -46,19 +42,15 @@ const CheckoutForm = ({ username }) => {
     return !Object.values(newErrors).some(error => error !== '');
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Kiểm tra dữ liệu biểu mẫu
     if (!validateForm()) {
       return;
     }
   
-    // Lấy giỏ hàng từ localStorage
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
   
-    // Kiểm tra giỏ hàng và xử lý giá trị
     if (cart.length === 0) {
       alert('Giỏ hàng trống. Không thể đặt hàng.');
       return;
@@ -72,10 +64,9 @@ const CheckoutForm = ({ username }) => {
         : parseFloat(item.price),
       total: (typeof item.price === 'string'
         ? parseFloat(item.price.replace(/[^0-9.-]+/g, ''))
-        : parseFloat(item.price)) * item.quantity // Tính giá trị tổng
+        : parseFloat(item.price)) * item.quantity
     }));
   
-    // Gửi dữ liệu đơn hàng và giỏ hàng đến máy chủ
     try {
       const response = await fetch('http://localhost:3000/api/orders', {
         method: 'POST',
@@ -83,6 +74,7 @@ const CheckoutForm = ({ username }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          name: username, // Use username from localStorage
           ...form,
           username,
           order_detail: orderItems,
@@ -96,10 +88,8 @@ const CheckoutForm = ({ username }) => {
   
       const data = await response.json();
       if (data.message === 'Đặt hàng thành công!') {
-        // Xóa giỏ hàng sau khi đặt hàng thành công
         localStorage.removeItem('cart');
         alert('Đặt hàng thành công!');
-        // Chuyển hướng đến trang giỏ hàng
         window.location.href = '/cart';
       } else {
         alert('Có lỗi xảy ra. Vui lòng thử lại.');
@@ -109,11 +99,7 @@ const CheckoutForm = ({ username }) => {
       alert(`Có lỗi xảy ra: ${error.message}`);
     }
   };
-  
-  
-  
-  
-  
+
   return (
     <div className="checkout-form">
       <h2>Thông tin người mua hàng</h2>
@@ -124,11 +110,9 @@ const CheckoutForm = ({ username }) => {
             type="text"
             id="name"
             name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
+            value={username || ''} // Display username as value
+            readOnly // Make it read-only
           />
-          {errors.name && <p className="error-message">{errors.name}</p>}
         </div>
         <div className="form-group">
           <label htmlFor="phone">Số điện thoại:</label>

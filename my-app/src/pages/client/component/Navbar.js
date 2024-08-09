@@ -6,6 +6,7 @@ import logo from "../../../../src/assets/logoo.png"; // Đường dẫn mới
 const Navbar = () => {
   const navigate = useNavigate();
   const username = localStorage.getItem('username');
+  const isLoggedIn = !!username; // Kiểm tra xem người dùng có đăng nhập hay không
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -23,12 +24,15 @@ const Navbar = () => {
         <Link to="/products">Sản phẩm</Link>
         <Link to="/about">Giới thiệu</Link>
         <Link to="/contact">Liên hệ</Link>
+        {isLoggedIn && (
+          <Link to="/orderhistory">Lịch sử Đơn hàng</Link> // Hiển thị nếu người dùng đã đăng nhập
+        )}
       </div>
       <div className="navbar-auth">
         <Link to="/cart" className="cart-link">
           <i className="fas fa-shopping-cart"></i> Giỏ hàng
         </Link>
-        {username ? (
+        {isLoggedIn ? (
           <>
             <span className="navbar-username">{username}</span>
             <button className="logout-button" onClick={handleLogout}>Đăng xuất</button>
