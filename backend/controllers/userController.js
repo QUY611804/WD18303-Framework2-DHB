@@ -50,6 +50,48 @@ exports.login = (req, res) => {
   );
 };
 
+// Đăng nhập
+exports.loginAdmin = (req, res) => {
+  const { username, password } = req.body;
+
+  connection.query(
+    "SELECT * FROM users WHERE username = ?",
+    [username],
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({ message: "Lỗi kết nối cơ sở dữ liệu" });
+      }
+
+      if (results.length === 0) {
+        return res.status(401).json({ message: "Tên đăng nhập không tồn tại" });
+      }
+
+      const user = results[0];
+
+      bcrypt.compare(password, user.password, (err, isMatch) => {
+        if (err) {
+          return res.status(500).json({ message: "Lỗi xác thực mật khẩu" });
+        }
+
+        if (!isMatch) {
+          return res.status(401).json({ message: "Mật khẩu không đúng" });
+        }
+
+        const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET || "default_secret", {
+          expiresIn: "1h",
+        });
+
+        res.status(200).json({
+          token,
+          username: user.username,
+          role: user.role
+        });
+      });
+    }
+  );
+};
+
+
 exports.register = (req, res) => {
   const { username, email, password } = req.body;
 

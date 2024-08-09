@@ -13,7 +13,11 @@ const orderController = require("../controllers/orderController");
 router.get("/users", userController.getAllUsers);
 router.get("/login", userController.getAllUsers);
 router.post("/login", userController.login);
+router.get("/loginAdmin", userController.getAllUsers);
+router.post("/loginAdmin", userController.loginAdmin);
 router.post('/register', userController.register);
+
+
 //products
 router.get("/products", productController.getAllProducts);
 router.get("/products_banchay", productController.bestSellProducts);
