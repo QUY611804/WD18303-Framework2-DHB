@@ -18,17 +18,23 @@ const Navbar = () => {
           Admin Panel
         </Text>
       </Box>
-      <NavLink to="/login" activeClassName="active">
-      <Button
-      fontFamily="math"
-        variant="outline"
-        colorScheme="teal"
-        borderColor="#00aa9f"
-        color="#00aa9f"
-        _hover={{ borderColor: "#32dfd4", color: "#32dfd4", bg: "transparent" }}
+      <NavLink
+        to="/login"
+        style={({ isActive }) => ({
+          textDecoration: 'none',
+          color: isActive ? '#32dfd4' : '#00aa9f',
+        })}
       >
-        Đăng xuất
-      </Button>
+        <Button
+          fontFamily="math"
+          variant="outline"
+          colorScheme="teal"
+          borderColor="#00aa9f"
+          color="#00aa9f"
+          _hover={{ borderColor: "#32dfd4", color: "#32dfd4", bg: "transparent" }}
+        >
+          Đăng xuất
+        </Button>
       </NavLink>
     </Flex>
   );

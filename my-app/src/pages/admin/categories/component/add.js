@@ -61,14 +61,14 @@ const AddCategoryPage = () => {
 
   return (
     <Box p={5} bg={bgColor} borderRadius="lg" boxShadow="md">
-      <Heading mb={5}>Thêm danh mục mới</Heading>
+      <Heading mb={5}>Thêm danh mục </Heading>
       <form onSubmit={handleSubmit}>
         <FormControl id="name" mb={4} isInvalid={errors.name}>
-          <FormLabel>Tên thương hiệu</FormLabel>
+          <FormLabel>Tên danh mục</FormLabel>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Nhập tên thương hiệu"
+            placeholder="Nhập tên danh mục"
           />
           {errors.name && <FormErrorMessage>{errors.name}</FormErrorMessage>}
         </FormControl>

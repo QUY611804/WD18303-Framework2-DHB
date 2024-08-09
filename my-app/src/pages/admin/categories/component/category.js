@@ -87,7 +87,7 @@ const CategoryPage = () => {
             _hover={{ bg: "#189537" }} // Màu khi hover
             _active={{ bg: "#157f31" }} // Màu khi click
           >
-            Thêm người dùng mới
+            Thêm danh mục
           </Button>
         </Link>
       </Flex>
