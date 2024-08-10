@@ -75,15 +75,25 @@ const AuthorsTable = () => {
   };
 
   const handleDeleteClick = (user) => {
-    setSelectedUser(user);
-    setIsOpen(true);
+    if (user.role === "admin") {
+      toast({
+        title: "Cannot Delete Admin",
+        description: "You cannot delete a user with the admin role.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+    } else {
+      setSelectedUser(user);
+      setIsOpen(true);
+    }
   };
 
   const statusBadgeColor = (status) => {
     switch (status) {
-      case "admin":
+      case "Admin":
         return { bg: "red.500", color: "white" };
-      case "user":
+      case "users":
         return { bg: "gray.500", color: "white" };
       default:
         return { bg: "gray.500", color: "white" };
@@ -93,9 +103,7 @@ const AuthorsTable = () => {
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md" fontFamily="math">
       <Flex mb={5} justify="space-between" align="center">
-        <Text fontSize="2xl" fontWeight="bold">
-          
-        </Text>
+        <Text fontSize="2xl" fontWeight="bold"></Text>
         <Link to="user/add">
           <Button
             bg="#1ba43b"
@@ -111,7 +119,8 @@ const AuthorsTable = () => {
       <Table variant="simple">
         <Thead>
           <Tr>
-            <Th>ID</Th>
+            <Th>stt</Th>
+            <Th display="none">ID</Th>
             <Th>Họ Tên</Th>
             <Th>Tài khoản</Th>
             <Th>Số điện thoại</Th>
@@ -120,9 +129,10 @@ const AuthorsTable = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((item) => (
+          {data.map((item,index) => (
             <Tr key={item.id} _hover={{ bg: hoverBgColor }}>
-              <Td>
+              <Td fontWeight="bold">{index + 1}</Td>
+              <Td display="none">
                 <Box display="flex" alignItems="center">
                   <Box>
                     <Text fontWeight="bold">{item.id}</Text>
@@ -131,7 +141,7 @@ const AuthorsTable = () => {
               </Td>
               <Td>
                 <Box display="flex" alignItems="center">
-                  <Avatar src={item.image} mr={3} />
+                  <Avatar src={`http://localhost:3000/uploads/users/${item.image}`} mr={3} />
                   <Box>
                     <Text fontWeight="bold">{item.name}</Text>
                     <Text fontSize="sm" color="gray.500">

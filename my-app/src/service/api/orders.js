@@ -26,3 +26,23 @@ export const fetchOrders = async () => {
       throw error;
     }
   };
+
+  export const deleteOrder = async (id) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/orders/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching order:", error);
+      throw error;
+    }
+  };
+  
+export const updateOrderStatus = async (id) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/order_detail/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching order:", error);
+    throw error;
+  }
+};

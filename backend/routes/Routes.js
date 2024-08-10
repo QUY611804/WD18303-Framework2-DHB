@@ -39,21 +39,22 @@ router.get('/orders/:id', orderController.getOrderById);
 
 //orders_detail
 router.get("/order_detail", order_detailController.getAllOrder_detail);
-
+router.get('/order_detail/:id', order_detailController.getOrderDetailById);
+router.put('/order_detail/:id', order_detailController.updateOrderDetailStatus);
 // Authentication
 
 // Define storage for multer
 // User routes
 router.get("/users", userController.getAllUsers);
 router.get("/users/:id", userController.getUserById);
-// router.post("/users", userController.createUser);
+router.post("/users", userController.postUsers);
 router.put("/users/:id", userController.updateUser);
 router.delete("/users/:id", userController.deleteUser);
 
 // Product routes
 router.get("/products", productController.getAllProducts);
 router.get("/products/:id", productController.getProductById);
-// router.post('/products', productController.postProduct);
+router.post('/products', productController.postProduct);
 router.put("/products/:id", productController.updateProduct);
 router.delete("/products/:id", productController.deleteProduct);
 

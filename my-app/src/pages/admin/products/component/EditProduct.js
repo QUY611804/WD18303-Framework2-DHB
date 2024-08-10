@@ -97,7 +97,7 @@ const EditProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-const newErrors = validateForm();
+    const newErrors = validateForm();
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -205,7 +205,7 @@ const newErrors = validateForm();
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
-{errors.price && <FormErrorMessage>{errors.price}</FormErrorMessage>}
+          {errors.price && <FormErrorMessage>{errors.price}</FormErrorMessage>}
         </FormControl>
         <FormControl id="sell_price" mb={4} isInvalid={errors.sell_price}>
           <FormLabel>Giá bán</FormLabel>

@@ -19,7 +19,10 @@ import {
   AlertDialogFooter,
   useToast,
 } from "@chakra-ui/react";
-import { fetchCategories,deleteCategory } from "../../../../service/api/Category";
+import {
+  fetchCategories,
+  deleteCategory,
+} from "../../../../service/api/Category";
 import { Link } from "react-router-dom";
 
 const CategoryPage = () => {
@@ -27,7 +30,7 @@ const CategoryPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategories, setselectedCategories] = useState(null);
   const cancelRef = useRef();
-  const toast = useToast(); 
+  const toast = useToast();
   const [categories, setCategories] = useState([]);
   const hoverBgColor = useColorModeValue("gray.100", "gray.700");
 
@@ -41,13 +44,14 @@ const CategoryPage = () => {
     getCategories();
   }, []);
 
-  
   const handleConfirmDelete = async () => {
     try {
       if (selectedCategories) {
         await deleteCategory(selectedCategories.id); // Changed to deleteUser
         setData((prevData) =>
-          prevData.filter((categories) => categories.id !== selectedCategories.id)
+          prevData.filter(
+            (categories) => categories.id !== selectedCategories.id
+          )
         );
         toast({
           title: "categories deleted.",
@@ -77,9 +81,7 @@ const CategoryPage = () => {
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md">
       <Flex mb={5} justify="space-between" align="center">
-        <Text fontSize="2xl" fontWeight="bold">
-          
-        </Text>
+        <Text fontSize="2xl" fontWeight="bold"></Text>
         <Link to="admin/categories/add">
           <Button
             bg="#1ba43b"
@@ -94,18 +96,20 @@ const CategoryPage = () => {
       <Table variant="simple">
         <Thead>
           <Tr>
-            <Th>ID</Th>
+            <Th>stt</Th>
+            <Th display="none">ID</Th>
             <Th>thương hiệu</Th>
             <Th>Hoạt động</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <Tr key={category.id} _hover={{ bg: hoverBgColor }}>
-              <Td>{category.id}</Td>
+              <Td fontWeight="bold">{index + 1}</Td>
+              <Td display="none">{category.id}</Td>
               <Td>{category.name}</Td>
               <Td>
-<Link to={`admin/Category/edit/${category.id}`}>
+                <Link to={`admin/Category/edit/${category.id}`}>
                   <Button colorScheme="blue" size="sm" mr={2}>
                     Sửa
                   </Button>

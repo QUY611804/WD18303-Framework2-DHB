@@ -228,3 +228,45 @@ exports.updateUser = (req, res) => {
   });
 };
 
+exports.postUsers = async (req, res, next) => {
+  try {
+    console.log("Request Body:", req.body);
+   
+    const {
+      name,
+      phone,
+      password,
+      email,
+      username,
+      role,
+    } = req.body;
+   
+
+    const query = `
+      INSERT INTO users( name,  phone, password, email, username, role)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    const values = [
+      name,
+      phone,
+      password,
+      email,
+      username,
+      role,
+    ];
+
+    connection.query(query, values, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      res.status(201).json({
+        message: "Product added successfully",
+        productId: results.insertId,
+      });
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    next(error);
+  }
+};

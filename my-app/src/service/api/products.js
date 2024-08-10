@@ -7,7 +7,7 @@ const BASE_URL = "http://localhost:3000/api";
 
 export const fetchProducts = async () => {
   try {
-    return await request({ method: "GET", path: `${BASE_URL}/products` });
+    return await request({ method: "GET", path: `api/products` });
   } catch (error) {
     console.error("Error fetching products:", error);
     throw error;
@@ -24,24 +24,7 @@ export const fetchProductById = async (id) => {
   }
 };
 
-// export const addProduct = async (formData) => {
-//   try {
 
-//     const response = await axios.post(`${BASE_URL}/products`, formData, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-
-//     return response.data;
-//   } catch (error) {
-//     console.error(
-//       "Error adding product:",
-//       error.response?.data || error.message
-//     );
-//     throw error;
-//   }
-// };
 
 export const updateProduct = async (id, productData) => {
   try {
