@@ -36,7 +36,6 @@ router.post("/orders", orderController.PostOrders);
 router.delete('/orders/:id', orderController.deleteOrder);
 router.get('/orders/:id', orderController.getOrderById);
 
-
 //orders_detail
 router.get("/order_detail", order_detailController.getAllOrder_detail);
 router.get('/order_detail/:id', order_detailController.getOrderDetailById);

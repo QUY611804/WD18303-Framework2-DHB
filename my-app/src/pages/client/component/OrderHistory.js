@@ -41,6 +41,14 @@ const OrderHistory = () => {
     fetchOrders();
   }, []);
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0
+    }).format(amount);
+  };
+
   if (loading) {
     return <p>Đang tải dữ liệu...</p>; // Hiển thị thông báo tải dữ liệu
   }
@@ -66,7 +74,7 @@ const OrderHistory = () => {
                 <td>
                   {order.image ? (
                     <img
-                      src={`${BASE_URL}/${order.image}`}
+                      src={`${BASE_URL}/uploads/products/${order.image}`}
                       alt={order.name}
                       className="product-image1"
                     />
@@ -74,7 +82,7 @@ const OrderHistory = () => {
                     "Không có hình ảnh"
                   )}
                 </td>
-                <td>{order.total} VNĐ</td>
+                <td>{formatCurrency(order.total)}</td> {/* Sử dụng hàm formatCurrency */}
                 <td>
                   <Link to={`/orders/${order.order_id}`} className="action-button detail-button">
                     Xem chi tiết

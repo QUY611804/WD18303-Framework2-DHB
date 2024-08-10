@@ -38,7 +38,7 @@ const Products = () => {
         <div className="product-list">
           {featuredProducts.map(product => (
             <div className="product-item" key={product.id}>
-              <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
+              <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
               <h3>{product.name}</h3>
               <p className="product-price">{product.price}</p>
               <div className="product-buttons">
@@ -54,7 +54,7 @@ const Products = () => {
         <div className="product-list">
           {bestSellingProducts.map(product => (
             <div className="product-item" key={product.id}>
-              <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
+              <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
               <h3>{product.name}</h3>
               <p className="product-price">{product.price}</p>
               <div className="product-buttons">
@@ -70,7 +70,7 @@ const Products = () => {
         <div className="product-list">
           {discountedProducts.map(product => (
             <div className="product-item" key={product.id}>
-              <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
+              <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
               <h3>{product.name}</h3>
               <p className="product-price">
                 <span className="old-price">{product.price} VNĐ</span>

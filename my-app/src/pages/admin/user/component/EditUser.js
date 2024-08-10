@@ -177,8 +177,8 @@ const EditUser = () => {
       <FormControl id="role" mb={4} isInvalid={errors.role}>
         <FormLabel>Phân quyền</FormLabel>
         <Select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="Admin">Admin</option>
-          <option value="User">User</option>
+          <option value="admin">Admin</option>
+          <option value="aser">User</option>
         </Select>
         <FormErrorMessage>{errors.role}</FormErrorMessage>
       </FormControl>

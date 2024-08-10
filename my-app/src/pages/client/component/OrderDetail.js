@@ -48,7 +48,10 @@ const OrderDetail = () => {
                 try {
                     // Gửi yêu cầu hủy đơn hàng
                     const response = await axios.delete(`${BASE_URL}/api/orders/${orderId}`, {
-                        data: { username } // Nếu cần gửi tên người dùng để xác thực
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                        data: { username }, // Nếu cần gửi tên người dùng để xác thực
                     });
 
                     if (response.status === 200) {
@@ -75,6 +78,10 @@ const OrderDetail = () => {
         }
     };
 
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    };
+
     if (loading) {
         return <p>Đang tải dữ liệu...</p>;
     }
@@ -96,9 +103,9 @@ const OrderDetail = () => {
                         <th>ID Đơn hàng</th>
                         <th>Ngày</th>
                         <th>Tổng tiền</th>
-                        <th>Trạng thái</th>
                         <th>Tên sản phẩm</th>
                         <th>Hình ảnh sản phẩm</th>
+                        <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -107,13 +114,12 @@ const OrderDetail = () => {
                         <tr key={order.order_id}>
                             <td>{order.order_id}</td>
                             <td>{new Date(order.date).toLocaleDateString()}</td>
-                            <td>{order.total} VNĐ</td>
-                            <td>{order.status}</td>
+                            <td>{formatCurrency(order.total)}</td>
                             <td>{order.name}</td>
                             <td>
                                 {order.image ? (
                                     <img
-                                        src={`${BASE_URL}/${order.image}`}
+                                        src={`${BASE_URL}/uploads/products/${order.image}`}
                                         alt={order.name}
                                         className="product-image1"
                                     />
@@ -121,6 +127,7 @@ const OrderDetail = () => {
                                     "Không có hình ảnh"
                                 )}
                             </td>
+                            <td>{order.statuss}</td>
                             <td>
                                 <button
                                     className="action-button cancel-button"

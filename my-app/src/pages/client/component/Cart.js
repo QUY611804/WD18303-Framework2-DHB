@@ -61,7 +61,7 @@ const Cart = () => {
       <ul>
         {cart.map(item => (
           <li key={item.id} className="cart-item">
-            <img src={`${BASE_URL}/${item.image}`} alt={item.name} className="cart-item-image" />
+            <img src={`${BASE_URL}/uploads/products/${item.image}`} alt={item.name} className="cart-item-image" />
             <div className="cart-item-info">
               <h2>{item.name}</h2>
               <p className="cart-item-price">Giá: {item.price} VNĐ</p>

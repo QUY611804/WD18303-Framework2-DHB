@@ -43,7 +43,7 @@ const Home = () => {
           {featuredProducts.length > 0 ? (
             featuredProducts.map(product => (
               <div className="product-item" key={product.id}>
-                <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
+                <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
                 <p className="product-price">{product.price}</p>
                 <div className="product-buttons">
@@ -63,7 +63,7 @@ const Home = () => {
           {bestSellingProducts.length > 0 ? (
             bestSellingProducts.map(product => (
               <div className="product-item" key={product.id}>
-                <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
+                <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
                 <p className="product-price">{product.price}</p>
                 <div className="product-buttons">

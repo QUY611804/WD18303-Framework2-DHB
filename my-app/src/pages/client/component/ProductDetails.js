@@ -79,7 +79,7 @@ const ProductDetails = () => {
   return (
     <div className="product-details">
       <div className="product-detail-container">
-        <img src={`${BASE_URL}/${product.image}`} alt={product.name} className="product-image" />
+        <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
         <div className="product-info">
           <h1 className="product-name">{product.name}</h1>
           <p className="product-price">{product.price} VNĐ</p>
