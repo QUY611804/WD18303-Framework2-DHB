@@ -52,23 +52,6 @@ const OrdersTable = () => {
     }
   };
 
-  const handleCancel = async (orderId) => {
-    const confirmed = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này?");
-    if (confirmed) {
-      try {
-        await deleteOrder(orderId);
-        setOrders((prevOrders) => prevOrders.filter((order) => order.id !== orderId));
-        toast({
-          title: "Đơn hàng đã bị hủy.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      } catch (error) {
-        console.error("Error canceling order:", error);
-      }
-    }
-  };
 
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md">
@@ -83,7 +66,6 @@ const OrdersTable = () => {
             <Th>Phương thức thanh toán</Th>
             <Th>Thời gian</Th>
             <Th>Chi tiết</Th>
-            <Th>Hành động</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -103,19 +85,7 @@ const OrdersTable = () => {
                   </Button>
                 </Link>
               </Td>
-              <Td>
-               
-               
-                
-                  <Button
-                    colorScheme="red"
-                    size="sm"
-                    onClick={() => handleCancel(order.id)}
-                  >
-                    Hủy
-                  </Button>
-                
-              </Td>
+             
             </Tr>
           ))}
         </Tbody>

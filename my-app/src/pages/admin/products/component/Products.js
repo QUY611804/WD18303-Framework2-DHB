@@ -115,7 +115,6 @@ const ProductsTable = () => {
             <Th>Tên sản phẩm</Th>
             <Th>Loại sản phẩm</Th>
             <Th>Giá</Th>
-            <Th>Giảm giá</Th>
             <Th>Trạng thái</Th>
             <Th>Hoạt động</Th>
           </Tr>
@@ -143,13 +142,10 @@ const ProductsTable = () => {
                 </Box>
               </Td>
               <Td>
-                <Text>{product.category_id}</Text>
+                <Text>{product.category}</Text>
               </Td>
               <Td>
                 <Text>{product.price}</Text>
-              </Td>
-              <Td>
-                <Text>{product.sell_price}</Text>
               </Td>
               <Td>
                 <Text>{product.status}</Text>

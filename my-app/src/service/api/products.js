@@ -67,7 +67,9 @@ export const addProduct = async (productData) => {
     const response = await axios.post(`${BASE_URL}/products`, productData);
     return response.data;
   } catch (error) {
+    console.error('Error adding product:', error.response ? error.response.data : error.message);
     throw error;
   }
 }
+
 

@@ -67,8 +67,7 @@ exports.GetOneProduct = (req, res) => {
   // Thực hiện truy vấn SQL với giá trị ID
   connection.query(
    `SELECT 
-    *,
-    (price - sell_price) AS price_difference
+    *
 FROM 
     products
 WHERE 
@@ -90,7 +89,11 @@ WHERE
 
 // admin
 exports.getAllProducts = (req, res) => {
-  connection.query("SELECT * FROM products", (err, results) => {
+  connection.query(`SELECT products.id,products.name,products.image,products.description,products.status,products.price, categories.name AS category
+FROM products
+INNER JOIN categories ON products.category_id = categories.id
+WHERE 1;
+`, (err, results) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
@@ -164,31 +167,31 @@ exports.postProduct = async (req, res, next) => {
       name,
       price,
       image,
-      sell_price,
       description,
       status,
-      category_id,
+      category_id
     } = req.body;
-   
+
+    // Ensure category_id is an integer
+    const categoryId = parseInt(category_id, 10);
 
     const query = `
-      INSERT INTO products (name, image, price, sell_price, description, status, category_id) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO products (name, image, price, description, status, category_id) 
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
     const values = [
       name,
       image,
       price,
-      sell_price,
       description,
       status,
-      category_id,
+      categoryId
     ];
 
     connection.query(query, values, (err, results) => {
       if (err) {
         console.error("Database error:", err);
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: 'An error occurred while adding the product.' });
       }
       res.status(201).json({
         message: "Product added successfully",

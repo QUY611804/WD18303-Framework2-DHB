@@ -33,31 +33,20 @@ WHERE o.name = ?
   );
 };
 
-//
+
+
 exports.getOrderDetailById = (req, res) => {
-  const orderId = parseInt(req.params.id, 10); // Phân tích ID đơn hàng từ tham số URL
+  const orderId = parseInt(req.params.id); // Lấy order_id từ tham số URL
 
   // Thực hiện truy vấn SQL
   connection.query(
     `SELECT 
-        orders.id, 
-        orders.name AS order_name,
-        products.name AS product_name,
-        products.image, 
-        products.price, 
-        products.sell_price, 
-        order_detail.quantity, 
-        order_detail.statuss, 
-        order_detail.total 
-     FROM 
-        order_detail 
-     INNER JOIN 
-        orders ON order_detail.order_id = orders.id 
-     INNER JOIN 
-        products ON order_detail.product_id = products.id 
-     WHERE 
-        order_detail.order_id = ?`,  // Sử dụng dấu chấm hỏi để bảo vệ chống lại SQL Injection
-    [orderId],  // Thay thế dấu chấm hỏi bằng ID đơn hàng
+       o.*,        
+       od.*        
+     FROM orders o
+     JOIN order_detail od ON o.id = od.order_id
+     WHERE o.id = ?`, // Sử dụng dấu hỏi để bảo mật SQL Injection
+    [orderId], // Thay thế dấu hỏi bằng giá trị của orderId
     (err, results) => {
       if (err) {
         return res.status(500).json({ error: err.message });  // Trả về lỗi với trạng thái 500 nếu có vấn đề
@@ -66,8 +55,6 @@ exports.getOrderDetailById = (req, res) => {
     }
   );
 };
-
-
 
 const { validationResult } = require('express-validator'); // Optional: để xác thực yêu cầu
 

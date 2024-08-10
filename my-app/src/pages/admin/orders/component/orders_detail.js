@@ -7,7 +7,6 @@ import {
   Tr,
   Th,
   Td,
-  Image,
   Text,
   Spinner,
   Button,
@@ -15,18 +14,18 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { fetchOrderDetailById, updateOrderDetailStatus } from "../../../../service/api/order_detail"; // Import your service functions
+import { fetchOrderDetailById, updateOrderDetailStatus } from "../../../../service/api/order_detail"; 
+import { deleteOrder } from '../../../../service/api/orders';
 
 const OrderDetailTable = () => {
-  const { orderId } = useParams(); // Get the order ID from the URL
+  const { orderId } = useParams(); 
   const [orderDetails, setOrderDetails] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
   const toast = useToast();
   const hoverBgColor = useColorModeValue("gray.100", "gray.700");
   const headerBgColor = useColorModeValue("gray.200", "gray.800");
 
-  // Fetch order details when the component mounts
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
@@ -42,13 +41,14 @@ const OrderDetailTable = () => {
 
     fetchOrderDetails();
   }, [orderId]);
+
   const handleApprove = async (itemId) => {
     try {
       console.log(`Updating status for order ID: ${itemId}`);
-      await updateOrderDetailStatus(itemId, "Đã duyệt");
+      await updateOrderDetailStatus(itemId, "Đã xác nhận");
       setOrderDetails((prevDetails) =>
         prevDetails.map((item) =>
-          item.id === itemId ? { ...item, statuss: "Đã duyệt" } : item
+          item.id === itemId ? { ...item, statuss: "Đã xác nhận" } : item
         )
       );
       toast({
@@ -68,8 +68,34 @@ const OrderDetailTable = () => {
       });
     }
   };
-  
-  
+
+  const handleDelete = async (itemId) => {
+    const confirmDelete = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
+    if (confirmDelete) {
+      try {
+        console.log(`Cancelling order ID: ${itemId}`);
+        await deleteOrder(itemId);
+        setOrderDetails((prevDetails) =>
+          prevDetails.filter((item) => item.order_id !== itemId)
+        );
+        toast({
+          title: "Đơn hàng đã bị hủy.",
+          status: "warning",
+          duration: 3000,
+          isClosable: true,
+        });
+      } catch (error) {
+        console.error("Error deleting order:", error);
+        toast({
+          title: "Có lỗi xảy ra.",
+          description: "Không thể hủy đơn hàng.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -94,7 +120,6 @@ const OrderDetailTable = () => {
     );
   }
 
- 
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md">
       <Text fontSize="2xl" fontWeight="bold" mb={4}>
@@ -103,12 +128,14 @@ const OrderDetailTable = () => {
       <Table variant="simple">
         <Thead bg={headerBgColor}>
           <Tr>
-            <Th>ID Đơn hàng</Th>
+            <Th>ID</Th>
             <Th>Tên khách hàng</Th>
-            <Th>Tên sản phẩm</Th>
-            <Th>Hình ảnh</Th>
+            <Th>Số điện thoại</Th>
+            <Th>Địa chỉ</Th>
+            <Th>Phương thức thanh toán</Th>
+            <Th>Thời gian</Th>
+            <Th>ID</Th>
             <Th>Giá</Th>
-            <Th>Giảm giá</Th>
             <Th>Số lượng</Th>
             <Th>Tổng</Th>
             <Th>Trạng thái</Th>
@@ -120,19 +147,14 @@ const OrderDetailTable = () => {
             console.log("Rendering Item:", item); // Debugging log
             return (
               <Tr key={item.id} _hover={{ bg: hoverBgColor }}>
+                <Td>{item.order_id}</Td>
+                <Td>{item.name}</Td>
+                <Td>{item.phone}</Td>
+                <Td>{item.address}</Td>
+                <Td>{item.paymentMethod}</Td>
+                <Td>{item.date}</Td>
                 <Td>{item.id}</Td>
-                <Td>{item.order_name}</Td>
-                <Td>{item.product_name}</Td>
-                <Td>
-                  <Image
-                    src={item.image}
-                    alt={item.product_name}
-                    boxSize="50px"
-                    objectFit="cover"
-                  />
-                </Td>
                 <Td>{item.price}</Td>
-                <Td>{item.sell_price}</Td>
                 <Td>{item.quantity}</Td>
                 <Td>{item.total}</Td>
                 <Td>{item.statuss}</Td>
@@ -141,11 +163,21 @@ const OrderDetailTable = () => {
                     <Button
                       colorScheme="green"
                       size="sm"
+                      margin="10px"
                       onClick={() => handleApprove(item.id)}
                     >
                       Duyệt
                     </Button>
-                   )} 
+                  )}
+                 
+                    <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => handleDelete(item.order_id)}
+                    >
+                      Hủy đơn hàng
+                    </Button>
+                 
                 </Td>
               </Tr>
             );
@@ -155,6 +187,5 @@ const OrderDetailTable = () => {
     </Box>
   );
 };
-
 
 export default OrderDetailTable;

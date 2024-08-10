@@ -27,6 +27,10 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+  };
+
   const increaseQuantity = () => {
     setQuantity(prevQuantity => prevQuantity + 1);
   };
@@ -37,7 +41,6 @@ const ProductDetails = () => {
 
   const addToCart = () => {
     if (product) {
-      // Create a new product object with all necessary details
       const productDetails = {
         id: product.id,
         name: product.name,
@@ -51,25 +54,22 @@ const ProductDetails = () => {
       const existingProductIndex = cart.findIndex(item => item.id === product.id);
 
       if (existingProductIndex !== -1) {
-        // If the product already exists in the cart, update the quantity
         cart[existingProductIndex].quantity += quantity;
       } else {
-        // Otherwise, add the new product to the cart
         cart.push(productDetails);
       }
 
-      // Update the cart in localStorage
       localStorage.setItem('cart', JSON.stringify(cart));
       alert('Sản phẩm đã được thêm vào giỏ hàng!');
     }
   };
 
   if (loading) {
-    return <div>Đang tải dữ liệu...</div>;
+    return <div className="loading">Đang tải dữ liệu...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className="error">{error}</div>;
   }
 
   if (!product) {
@@ -82,7 +82,7 @@ const ProductDetails = () => {
         <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
         <div className="product-info">
           <h1 className="product-name">{product.name}</h1>
-          <p className="product-price">{product.price} VNĐ</p>
+          <p className="product-price">{formatPrice(product.price)}</p>
           <p className="product-description">{product.description}</p>
           <div className="quantity-controls1">
             <h4>Số lượng:</h4>

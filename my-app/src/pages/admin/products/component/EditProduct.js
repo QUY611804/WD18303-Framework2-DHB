@@ -22,7 +22,6 @@ const EditProduct = () => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [sell_price, setSellPrice] = useState("");
   const [status, setStatus] = useState("");
   const [image, setImage] = useState("");
   const [imageFile, setImageFile] = useState(null);
@@ -42,7 +41,6 @@ const EditProduct = () => {
           setName(data.name || "");
           setCategory(data.category_id || "");
           setPrice(data.price || "");
-          setSellPrice(data.sell_price || "");
           setDescription(data.description || "");
           setStatus(data.status || "");
           setImage(data.image || "");
@@ -88,8 +86,6 @@ const EditProduct = () => {
     if (!category) newErrors.category = "Loại sản phẩm là bắt buộc.";
     if (!price || isNaN(price))
       newErrors.price = "Giá là bắt buộc và phải là số.";
-    if (!sell_price || isNaN(sell_price))
-      newErrors.sell_price = "Giá bán là bắt buộc và phải là số.";
     if (!image) newErrors.image = "Ảnh sản phẩm là bắt buộc.";
 
     return newErrors;
@@ -138,7 +134,6 @@ const EditProduct = () => {
     const productData = {
       name,
       price,
-      sell_price,
       description,
       image: imageUrl,
       status,
@@ -207,17 +202,7 @@ const EditProduct = () => {
           />
           {errors.price && <FormErrorMessage>{errors.price}</FormErrorMessage>}
         </FormControl>
-        <FormControl id="sell_price" mb={4} isInvalid={errors.sell_price}>
-          <FormLabel>Giá bán</FormLabel>
-          <Input
-            type="number"
-            value={sell_price}
-            onChange={(e) => setSellPrice(e.target.value)}
-          />
-          {errors.sell_price && (
-            <FormErrorMessage>{errors.sell_price}</FormErrorMessage>
-          )}
-        </FormControl>
+     
         <FormControl id="description" mb={4} isInvalid={errors.description}>
           <FormLabel>Mô tả</FormLabel>
           <Input

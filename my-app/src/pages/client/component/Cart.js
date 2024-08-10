@@ -6,12 +6,14 @@ const BASE_URL = 'http://localhost:3000'; // Cập nhật đúng URL của serve
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
   const username = localStorage.getItem('username');
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     setCart(storedCart);
+    setLoading(false);
   }, []);
 
   const removeFromCart = (id) => {
@@ -36,6 +38,10 @@ const Cart = () => {
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+  };
+
   const getTotal = () => {
     return cart.reduce((total, item) => {
       const price = typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.-]+/g, '')) : parseFloat(item.price);
@@ -51,8 +57,12 @@ const Cart = () => {
     setShowCheckoutForm(true);
   };
 
+  if (loading) {
+    return <div>Đang tải giỏ hàng...</div>;
+  }
+
   if (cart.length === 0) {
-    return <div>Giỏ hàng của bạn đang trống!</div>;
+    return <div className="empty-cart">Giỏ hàng của bạn đang trống!</div>;
   }
 
   return (
@@ -64,7 +74,7 @@ const Cart = () => {
             <img src={`${BASE_URL}/uploads/products/${item.image}`} alt={item.name} className="cart-item-image" />
             <div className="cart-item-info">
               <h2>{item.name}</h2>
-              <p className="cart-item-price">Giá: {item.price} VNĐ</p>
+              <p className="cart-item-price">Giá: {formatPrice(item.price)}</p>
               <div className="quantity-controls">
                 <h4>Số lượng:</h4>
                 <button onClick={() => decreaseQuantity(item.id)} className="quantity-button">-</button>
@@ -78,7 +88,7 @@ const Cart = () => {
         ))}
       </ul>
       <div className="cart-total">
-        <h3>Tổng cộng: {getTotal()} VNĐ</h3>
+        <h3>Tổng cộng: {formatPrice(getTotal())}</h3>
         <button className="checkout-button" onClick={handleCheckout}>Thanh toán</button>
       </div>
       {showCheckoutForm && <CheckoutForm username={username} />}

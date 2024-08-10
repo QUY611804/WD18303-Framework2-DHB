@@ -30,6 +30,11 @@ const Products = () => {
       .catch(error => console.error('Error fetching discounted products:', error));
   }, []);
 
+  // Utility function to format the price
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+  };
+
   return (
     <div className="products">
       <ImageSlider />
@@ -40,7 +45,7 @@ const Products = () => {
             <div className="product-item" key={product.id}>
               <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
               <h3>{product.name}</h3>
-              <p className="product-price">{product.price}</p>
+              <p className="product-price">{formatPrice(product.price)}</p> {/* Format price */}
               <div className="product-buttons">
                 <Link to={`/product/${product.id}`} className="details-button">Chi tiết</Link>
               </div>
@@ -56,7 +61,7 @@ const Products = () => {
             <div className="product-item" key={product.id}>
               <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
               <h3>{product.name}</h3>
-              <p className="product-price">{product.price}</p>
+              <p className="product-price">{formatPrice(product.price)}</p> {/* Format price */}
               <div className="product-buttons">
                 <Link to={`/product/${product.id}`} className="details-button">Chi tiết</Link>
               </div>
@@ -72,11 +77,7 @@ const Products = () => {
             <div className="product-item" key={product.id}>
               <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
               <h3>{product.name}</h3>
-              <p className="product-price">
-                <span className="old-price">{product.price} VNĐ</span>
-                <br/>
-                {product.sell_price} VNĐ
-              </p>
+              <p className="product-price">{formatPrice(product.price)}</p> {/* Format price */}
               <div className="product-buttons">
                 <Link to={`/product/${product.id}`} className="details-button">Chi tiết</Link>
               </div>

@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -21,7 +18,6 @@ const AddProduct = () => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [sellPrice, setSellPrice] = useState("");
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
@@ -57,8 +53,8 @@ const AddProduct = () => {
 
     if (!name) newErrors.name = "Tên sản phẩm là bắt buộc.";
     if (!category) newErrors.category = "Loại sản phẩm là bắt buộc.";
-    if (!price || isNaN(price)) newErrors.price = "Giá là bắt buộc và phải là số.";
-    if (!sellPrice || isNaN(sellPrice)) newErrors.sellPrice = "Giá bán là bắt buộc và phải là số.";
+    if (!price || isNaN(price) || parseFloat(price) <= 0)
+      newErrors.price = "Giá là bắt buộc và phải là số lớn hơn 0.";
     if (!description) newErrors.description = "Mô tả là bắt buộc.";
     if (!status) newErrors.status = "Trạng thái là bắt buộc.";
     if (!imageFile) newErrors.image = "Ảnh sản phẩm là bắt buộc.";
@@ -107,7 +103,6 @@ const AddProduct = () => {
     const productData = {
       name,
       price,
-      sell_price: sellPrice,
       description,
       image: imageUrl,
       status,
@@ -128,7 +123,7 @@ const AddProduct = () => {
       console.error("Add product error:", error);
       toast({
         title: "Error adding product.",
-        description: error.message,
+        description: "Failed to add product. Please try again.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -150,47 +145,56 @@ const AddProduct = () => {
         </FormControl>
         <FormControl id="category" mb={4} isInvalid={errors.category}>
           <FormLabel>Loại sản phẩm</FormLabel>
-          <Select value={category} onChange={(e) => setCategory(e.target.value)}>
-            <option value="">Chọn loại sản phẩm</option>
+          <Select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Chọn loại sản phẩm"
+          >
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
             ))}
           </Select>
-          {errors.category && <FormErrorMessage>{errors.category}</FormErrorMessage>}
+          {errors.category && (
+            <FormErrorMessage>{errors.category}</FormErrorMessage>
+          )}
         </FormControl>
         <FormControl id="price" mb={4} isInvalid={errors.price}>
           <FormLabel>Giá</FormLabel>
           <Input
             type="number"
+            min="0.01"
+            step="0.01"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
           {errors.price && <FormErrorMessage>{errors.price}</FormErrorMessage>}
         </FormControl>
-        <FormControl id="sell_price" mb={4} isInvalid={errors.sellPrice}>
-          <FormLabel>Giá bán</FormLabel>
-          <Input
-            type="number"
-            value={sellPrice}
-            onChange={(e) => setSellPrice(e.target.value)}
-          />
-          {errors.sellPrice && <FormErrorMessage>{errors.sellPrice}</FormErrorMessage>}
-        </FormControl>
+
         <FormControl id="description" mb={4} isInvalid={errors.description}>
           <FormLabel>Mô tả</FormLabel>
           <Input
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          {errors.description && <FormErrorMessage>{errors.description}</FormErrorMessage>}
+          {errors.description && (
+            <FormErrorMessage>{errors.description}</FormErrorMessage>
+          )}
         </FormControl>
         <FormControl id="status" mb={4} isInvalid={errors.status}>
           <FormLabel>Trạng thái</FormLabel>
-          <Input value={status} onChange={(e) => setStatus(e.target.value)} />
-          {errors.status && <FormErrorMessage>{errors.status}</FormErrorMessage>}
+          <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+            <option value="">Chọn trạng thái</option>
+            <option value="bán chạy">Bán chạy</option>
+            <option value="nổi bật">Nổi bật</option>
+            <option value="khuyến mãi">Khuyến mãi</option>
+          </Select>
+          {errors.status && (
+            <FormErrorMessage>{errors.status}</FormErrorMessage>
+          )}
         </FormControl>
+
         <FormControl id="image" mb={4} isInvalid={errors.image}>
           <FormLabel>Ảnh sản phẩm</FormLabel>
           <Input type="file" onChange={handleImageChange} />

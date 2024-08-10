@@ -30,8 +30,12 @@ const Home = () => {
     fetchProducts();
   }, []);
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+  };
+
   if (loading) {
-    return <div>Đang tải...</div>;
+    return <div className="loading">Đang tải...</div>;
   }
 
   return (
@@ -45,7 +49,7 @@ const Home = () => {
               <div className="product-item" key={product.id}>
                 <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
-                <p className="product-price">{product.price}</p>
+                <p className="product-price">{formatPrice(product.price)}</p>
                 <div className="product-buttons">
                   <Link to={`/product/${product.id}`} className="details-button">Chi tiết</Link>
                 </div>
@@ -65,7 +69,7 @@ const Home = () => {
               <div className="product-item" key={product.id}>
                 <img src={`${BASE_URL}/uploads/products/${product.image}`} alt={product.name} className="product-image" />
                 <h3>{product.name}</h3>
-                <p className="product-price">{product.price}</p>
+                <p className="product-price">{formatPrice(product.price)}</p>
                 <div className="product-buttons">
                   <Link to={`/product/${product.id}`} className="details-button">Chi tiết</Link>
                 </div>
