@@ -88,7 +88,7 @@ WHERE
 
 
 
-
+// admin
 exports.getAllProducts = (req, res) => {
   connection.query("SELECT * FROM products", (err, results) => {
     if (err) {
@@ -159,17 +159,17 @@ exports.updateProduct = (req, res) => {
 exports.postProduct = async (req, res, next) => {
   try {
     console.log("Request Body:", req.body);
-    console.log("Uploaded File:", req.file);
 
     const {
       name,
       price,
+      image,
       sell_price,
       description,
       status,
       category_id,
     } = req.body;
-    const image = req.file ? req.file.filename : null;
+   
 
     const query = `
       INSERT INTO products (name, image, price, sell_price, description, status, category_id) 

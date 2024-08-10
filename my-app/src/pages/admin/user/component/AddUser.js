@@ -18,7 +18,6 @@ const AddUser = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [image, setImage] = useState(null);
   const [role, setRole] = useState("user");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -32,7 +31,6 @@ const AddUser = () => {
     if (!password) newErrors.password = "Password là bắt buộc.";
     if (!phone) newErrors.phone = "Số điện thoại là bắt buộc.";
     else if (!/^\d{10}$/.test(phone)) newErrors.phone = "Số điện thoại không hợp lệ.";
-    if (!image) newErrors.image = "Profile image là bắt buộc.";
     return newErrors;
   };
 
@@ -47,15 +45,10 @@ const AddUser = () => {
         formData.append("email", email);
         formData.append("password", password);
         formData.append("phone", phone);
-        formData.append("image", image);
         formData.append("role", role);
 
         // Assuming there's an API endpoint for adding users
-        await axios.post("http://localhost:3000/api/users", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+       
 
         // Simulate a successful save with a toast notification
         toast({
@@ -87,9 +80,7 @@ const AddUser = () => {
     navigate("/admin/user");
   };
 
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-  };
+
 
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md" fontFamily="math">
@@ -135,15 +126,7 @@ const AddUser = () => {
           />
           <FormErrorMessage>{errors.phone}</FormErrorMessage>
         </FormControl>
-        <FormControl id="image" mb={4} isInvalid={errors.image}>
-          <FormLabel>Profile Image</FormLabel>
-          <Input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-          <FormErrorMessage>{errors.image}</FormErrorMessage>
-        </FormControl>
+      
         <FormControl id="role" mb={4}>
           <FormLabel>Role</FormLabel>
           <Select value={role} onChange={(e) => setRole(e.target.value)}>

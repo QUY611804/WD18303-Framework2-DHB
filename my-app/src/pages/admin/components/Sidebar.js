@@ -1,3 +1,5 @@
+
+
 import React from "react";
 import {
   Box,
@@ -12,14 +14,13 @@ import {
 import { NavLink } from "react-router-dom";
 import CategoryIcon, { HomeIcon, ProfileIcon, BagIcon, InvoiceIcon } from "../../../components/icon/icon";
 
-// Placeholder user data
-const user = {
-  name: "John Doe",
-  email: "john.doe@example.com",
-  avatar: "https://bit.ly/broken-link",
-};
-
 const Sidebar = () => {
+  const user = {
+    name: localStorage.getItem('username') || 'John Doe',
+    email: localStorage.getItem('email') || "admin@gmail.com",
+    avatar: localStorage.getItem('avatar') || 'https://bit.ly/broken-link',
+  };
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const sidebarBgColor = "#f7fafc";
@@ -51,12 +52,12 @@ const Sidebar = () => {
         >
           <Stack spacing={4}>
             <Box textAlign="center">
-              <Avatar size="xl" name={user.name} src={user.avatar} mb={4} />
+              <Avatar size="xl" name={user.name} src={user.image} mb={4} />
               <Text fontSize="lg" fontWeight="bold" color={linkColor}>
                 {user.name}
               </Text>
               <Text fontSize="sm" color="gray.500">
-                {user.email}
+                {user.email }
               </Text>
             </Box>
             <NavLink to="/admin/dashboard">
@@ -187,3 +188,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

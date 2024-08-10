@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "http://localhost:3000"; // Update with your server URL
+export const BASE_URL = "http://localhost:3000/"; // Update with your server URL
 
 const request = async ({ method = "GET", path = "", data = {}, headers = {} }) => {
   try {
