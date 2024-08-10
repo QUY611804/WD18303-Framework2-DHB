@@ -1,3 +1,5 @@
+
+// export default AddUser;
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,9 +14,11 @@ import {
   Select,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { addUser } from "../../../../service/api/users";
 
 const AddUser = () => {
   const [name, setName] = useState("");
+  const [username, setUsername] = useState(""); // New state for username
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
@@ -26,6 +30,7 @@ const AddUser = () => {
   const validate = () => {
     const newErrors = {};
     if (!name) newErrors.name = "Họ tên là bắt buộc.";
+    if (!username) newErrors.username = "Tên đăng nhập là bắt buộc."; // Validation for username
     if (!email) newErrors.email = "Email là bắt buộc.";
     else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email không hợp lệ.";
     if (!password) newErrors.password = "Password là bắt buộc.";
@@ -39,21 +44,21 @@ const AddUser = () => {
     const newErrors = validate();
     if (Object.keys(newErrors).length === 0) {
       try {
-        // Add logic to save the user (e.g., API call)
-        const formData = new FormData();
-        formData.append("name", name);
-        formData.append("email", email);
-        formData.append("password", password);
-        formData.append("phone", phone);
-        formData.append("role", role);
+        // Prepare user data
+        const userData = {
+          name,
+          username, // Include username in the data
+          email,
+          password,
+          phone,
+          role,
+        };
 
-        // Assuming there's an API endpoint for adding users
-       
+        await addUser(userData); // API call to save the user
 
-        // Simulate a successful save with a toast notification
         toast({
-          title: "User added.",
-          description: "The user has been added successfully.",
+          title: "Thành công!",
+          description: "Người dùng đã được thêm thành công.",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -64,8 +69,8 @@ const AddUser = () => {
       } catch (error) {
         console.error("Error adding user:", error);
         toast({
-          title: "Error adding user.",
-          description: error.message,
+          title: "Thêm người dùng thất bại.",
+          description: error.response?.data?.message || error.message,
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -80,8 +85,6 @@ const AddUser = () => {
     navigate("/admin/user");
   };
 
-
-
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md" fontFamily="math">
       <Heading mb={5}>Thêm thông tin</Heading>
@@ -90,48 +93,57 @@ const AddUser = () => {
           <FormLabel>Họ tên</FormLabel>
           <Input
             type="text"
-            placeholder="Enter user name"
+            placeholder="Nhập họ tên"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <FormErrorMessage>{errors.name}</FormErrorMessage>
         </FormControl>
+        <FormControl id="username" mb={4} isInvalid={errors.username}>
+          <FormLabel>Tên đăng nhập</FormLabel> {/* New field for username */}
+          <Input
+            type="text"
+            placeholder="Nhập tên đăng nhập"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <FormErrorMessage>{errors.username}</FormErrorMessage>
+        </FormControl>
         <FormControl id="email" mb={4} isInvalid={errors.email}>
           <FormLabel>Email</FormLabel>
           <Input
             type="email"
-            placeholder="Enter user email"
+            placeholder="Nhập email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <FormErrorMessage>{errors.email}</FormErrorMessage>
         </FormControl>
         <FormControl id="password" mb={4} isInvalid={errors.password}>
-          <FormLabel>Password</FormLabel>
+          <FormLabel>Mật khẩu</FormLabel>
           <Input
             type="password"
-            placeholder="Enter user password"
+            placeholder="Nhập mật khẩu"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <FormErrorMessage>{errors.password}</FormErrorMessage>
         </FormControl>
         <FormControl id="phone" mb={4} isInvalid={errors.phone}>
-          <FormLabel>Phone</FormLabel>
+          <FormLabel>Số điện thoại</FormLabel>
           <Input
             type="text"
-            placeholder="Enter user phone"
+            placeholder="Nhập số điện thoại"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
           <FormErrorMessage>{errors.phone}</FormErrorMessage>
         </FormControl>
-      
         <FormControl id="role" mb={4}>
-          <FormLabel>Role</FormLabel>
+          <FormLabel>Vai trò</FormLabel>
           <Select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
+            <option value="user">user</option>
+            <option value="admin">admin</option>
           </Select>
         </FormControl>
         <Button colorScheme="teal" type="submit" mr="10px">
