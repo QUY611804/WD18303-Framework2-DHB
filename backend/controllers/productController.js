@@ -123,14 +123,16 @@ exports.updateProduct = (req, res) => {
   const { name, price, sell_price, description, image, status, category_id } =
     req.body;
 
-  // Prepare the SQL query
+  // Log the incoming data for debugging
+  console.log("Updating product with ID:", productId);
+  console.log("Product Data:", { name, price, description, image, status, category_id });
+
   const query = `
     UPDATE products 
     SET 
       name = ?, 
       image = ?, 
-      price = ?, 
-      sell_price = ?, 
+      price = ?,  
       description = ?, 
       status = ?, 
       category_id = ? 
@@ -141,16 +143,19 @@ exports.updateProduct = (req, res) => {
     name,
     image,
     price,
-    sell_price,
     description,
     status,
     category_id,
     productId,
   ];
 
-  // Execute the query
+  // Log the SQL query and values
+  console.log("SQL Query:", query);
+  console.log("Values:", values);
+
   connection.query(query, values, (err, results) => {
     if (err) {
+      console.error("SQL Error:", err);
       return res.status(500).json({ error: err.message });
     }
     if (results.affectedRows === 0) {

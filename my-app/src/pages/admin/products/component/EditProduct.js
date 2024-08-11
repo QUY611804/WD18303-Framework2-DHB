@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -202,7 +203,7 @@ const EditProduct = () => {
           />
           {errors.price && <FormErrorMessage>{errors.price}</FormErrorMessage>}
         </FormControl>
-     
+
         <FormControl id="description" mb={4} isInvalid={errors.description}>
           <FormLabel>Mô tả</FormLabel>
           <Input
@@ -215,11 +216,17 @@ const EditProduct = () => {
         </FormControl>
         <FormControl id="status" mb={4} isInvalid={errors.status}>
           <FormLabel>Trạng thái</FormLabel>
-          <Input value={status} onChange={(e) => setStatus(e.target.value)} />
+          <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+            <option value="">Chọn trạng thái</option>
+            <option value="bán chạy">Bán chạy</option>
+            <option value="nổi bật">Nổi bật</option>
+            <option value="khuyến mãi">Khuyến mãi</option>
+          </Select>
           {errors.status && (
             <FormErrorMessage>{errors.status}</FormErrorMessage>
           )}
         </FormControl>
+
         <FormControl id="image" mb={4} isInvalid={errors.image}>
           <FormLabel>Ảnh sản phẩm</FormLabel>
           <Input type="file" onChange={handleImageChange} />
