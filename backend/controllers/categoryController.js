@@ -1,8 +1,8 @@
-const connection = require('../config/database');
+const connection = require("../config/database");
 
 // Example function to get all categoris
 exports.getAllcategoris = (req, res) => {
-  connection.query('SELECT * FROM categories', (err, results) => {
+  connection.query("SELECT * FROM categories", (err, results) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
@@ -10,15 +10,13 @@ exports.getAllcategoris = (req, res) => {
   });
 };
 
-
-
 exports.getCategoryById = (req, res) => {
   const categoryId = req.params.id; //Sử dụng cách đặt tên camelCase nhất quán
 
   // Query the database to get user by ID
   connection.query(
     "SELECT * FROM categories WHERE id = ?", // SQL query
-    [categoryId ], // Truy vấn tham số hóa để ngăn chặn SQL injection
+    [categoryId], // Truy vấn tham số hóa để ngăn chặn SQL injection
     (err, results) => {
       if (err) {
         // Ghi lại lỗi và phản hồi bằng mã trạng thái 500
@@ -38,7 +36,6 @@ exports.getCategoryById = (req, res) => {
     }
   );
 };
-
 
 exports.deleteCategory = (req, res) => {
   const categoryId = req.params.id; // Use consistent camelCase naming
@@ -90,24 +87,20 @@ exports.updateCategory = (req, res) => {
   });
 };
 
-
-
-
-
 exports.postCategory = (req, res) => {
   const { name } = req.body;
 
   // Validate input
   if (!name) {
-    return res.status(400).json({ message: 'Name is required' });
+    return res.status(400).json({ message: "Name is required" });
   }
 
   // Prepare the SQL query
   const query = `
-INSERT INTO categories (name)
+    INSERT INTO categories (name)
     VALUES (?);
   `;
-  const values = [name || '']; // Use empty string if description is not provided
+  const values = [name || ""]; // Use empty string if description is not provided
 
   // Execute the query
   connection.query(query, values, (err, results) => {
@@ -115,8 +108,8 @@ INSERT INTO categories (name)
       return res.status(500).json({ error: err.message });
     }
     res.status(201).json({
-      message: 'Category created successfully',
-      categoryId: results.insertId // Return the ID of the newly created category
+      message: "Category created successfully",
+      categoryId: results.insertId, // Return the ID of the newly created category
     });
   });
 };

@@ -48,13 +48,13 @@ const EditProduct = () => {
         }
       } catch (error) {
         toast({
-          title: "Error fetching product.",
-          description: "Failed to fetch product details.",
-          status: "error",
+          title: "Lỗi khi tải sản phẩm.",
+          description: "Không thể lấy thông tin chi tiết sản phẩm.",
+          status: "Lỗi",
           duration: 5000,
           isClosable: true,
         });
-        console.error("Failed to fetch product:", error);
+        console.error("Không thể tải sản phẩm:", error);
       }
     };
 
@@ -66,13 +66,13 @@ const EditProduct = () => {
         }
       } catch (error) {
         toast({
-          title: "Error fetching categories.",
-          description: "Failed to fetch categories.",
-          status: "error",
+          title: "Có lỗi khi tìm danh mục.",
+          description: "Không tìm được danh mục.",
+          status: "lỗi",
           duration: 5000,
           isClosable: true,
         });
-        console.error("Failed to fetch categories:", error);
+        console.error("Không thể tìm được danh mục:", error);
       }
     };
 

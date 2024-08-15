@@ -20,7 +20,8 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useColorModeValue,
-  useToast, // Correctly import useToast
+  useToast,
+  Img, // Correctly import useToast
 } from "@chakra-ui/react";
 
 import { fetchUsers, deleteUser } from "../../../../service/api/users";
@@ -91,7 +92,7 @@ const AuthorsTable = () => {
 
   const statusBadgeColor = (status) => {
     switch (status) {
-      case "Admin":
+      case "admin":
         return { bg: "red.500", color: "white" };
       case "users":
         return { bg: "gray.500", color: "white" };
@@ -141,7 +142,7 @@ const AuthorsTable = () => {
               </Td>
               <Td>
                 <Box display="flex" alignItems="center">
-                  <Avatar src={`http://localhost:3000/uploads/users/${item.image}`} mr={3} />
+                 
                   <Box>
                     <Text fontWeight="bold">{item.name}</Text>
                     <Text fontSize="sm" color="gray.500">
@@ -154,7 +155,6 @@ const AuthorsTable = () => {
               <Td>
                 <Text fontWeight="bold">{item.username}</Text>
                 <Text fontSize="sm" color="gray.500">
-                  {/* {item.function.name} */}
                 </Text>
               </Td>
               <Td>

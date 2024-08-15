@@ -91,9 +91,9 @@ const AddProduct = () => {
       imageUrl = response.data.filePath;
     } catch (error) {
       toast({
-        title: "Image Upload Error",
-        description: "Failed to upload image.",
-        status: "error",
+        title: "Lỗi tải hình ảnh lên",
+        description: "Không tải được hình ảnh.",
+        status: "lỗi",
         duration: 5000,
         isClosable: true,
       });

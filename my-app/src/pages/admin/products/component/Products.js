@@ -70,8 +70,8 @@ const ProductsTable = () => {
           prevProducts.filter((product) => product.id !== selectedProduct.id)
         );
         toast({
-          title: "Product deleted.",
-          description: "Product has been deleted successfully.",
+          title: "Sản phẩm đã bị xóa.",
+          description: "Sản phẩm đã được xóa thành công.",
           status: "success",
           duration: 5000,
           isClosable: true,

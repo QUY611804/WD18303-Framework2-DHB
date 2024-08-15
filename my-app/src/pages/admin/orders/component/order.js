@@ -12,12 +12,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { fetchOrders, updateOrderStatus, deleteOrder } from "../../../../service/api/orders"; // Import your service functions
+import { fetchOrders  } from "../../../../service/api/orders"; // Import your service functions
 
 const OrdersTable = () => {
   const [orders, setOrders] = useState([]);
   const hoverBgColor = useColorModeValue("gray.100", "gray.700");
-  const toast = useToast();
+
 
   useEffect(() => {
     const getOrders = async () => {
@@ -27,31 +27,11 @@ const OrdersTable = () => {
           setOrders(fetchedData);
         }
       } catch (error) {
-        console.error("Error fetching orders:", error);
+        console.error("Lỗi khi lấy đơn hàng:", error);
       }
     };
     getOrders();
   }, []);
-
-  const handleApprove = async (orderId) => {
-    try {
-      await updateOrderStatus(orderId, "Đã duyệt");
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === orderId ? { ...order, status: "Đã duyệt" } : order
-        )
-      );
-      toast({
-        title: "Đơn hàng đã được duyệt.",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } catch (error) {
-      console.error("Error approving order:", error);
-    }
-  };
-
 
   return (
     <Box p={5} bg="white" borderRadius="lg" boxShadow="md">

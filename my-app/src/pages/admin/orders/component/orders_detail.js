@@ -48,7 +48,7 @@ const OrderDetailTable = () => {
       await updateOrderDetailStatus(itemId, "Đã xác nhận");
       setOrderDetails((prevDetails) =>
         prevDetails.map((item) =>
-          item.id === itemId ? { ...item, statuss: "Đã xác nhận" } : item
+          item.order_id === itemId ? { ...item, statuss: "Đã xác nhận" } : item
         )
       );
       toast({
@@ -128,13 +128,13 @@ const OrderDetailTable = () => {
       <Table variant="simple">
         <Thead bg={headerBgColor}>
           <Tr>
-            <Th>ID</Th>
+            <Th>Order ID</Th> {/* Updated header */}
             <Th>Tên khách hàng</Th>
             <Th>Số điện thoại</Th>
             <Th>Địa chỉ</Th>
             <Th>Phương thức thanh toán</Th>
             <Th>Thời gian</Th>
-            <Th>ID</Th>
+            <Th>Item ID</Th> {/* Updated header */}
             <Th>Giá</Th>
             <Th>Số lượng</Th>
             <Th>Tổng</Th>
@@ -157,19 +157,19 @@ const OrderDetailTable = () => {
                 <Td>{item.price}</Td>
                 <Td>{item.quantity}</Td>
                 <Td>{item.total}</Td>
-                <Td>{item.statuss}</Td>
+                <Td>{item.statuss}</Td> {/* Updated property name */}
                 <Td>
                   {item.statuss === "Chờ xác nhận" && (
                     <Button
                       colorScheme="green"
                       size="sm"
                       margin="10px"
-                      onClick={() => handleApprove(item.id)}
+                      onClick={() => handleApprove(item.order_id)}
                     >
                       Duyệt
                     </Button>
                   )}
-                 
+                  {item.status !== "Đã hủy" && (
                     <Button
                       colorScheme="red"
                       size="sm"
@@ -177,7 +177,7 @@ const OrderDetailTable = () => {
                     >
                       Hủy đơn hàng
                     </Button>
-                 
+                  )}
                 </Td>
               </Tr>
             );

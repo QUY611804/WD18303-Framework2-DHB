@@ -5,14 +5,13 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Textarea,
   Heading,
   useToast,
   useColorModeValue,
   FormErrorMessage,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { addCategory } from "../../../../service/api/Category"; // Make sure to create this function in your service
+import { addCategory } from "../../../../service/api/Category"; // Ensure this function exists and works correctly
 
 const AddCategoryPage = () => {
   const [name, setName] = useState("");
@@ -40,19 +39,19 @@ const AddCategoryPage = () => {
     try {
       await addCategory(categoryData); // Call your API to add the category
       toast({
-        title: "Category added.",
-        description: "New category has been added successfully.",
-        status: "success",
+        title: "Danh mục đã được thêm.",
+        description: "Danh mục mới đã được thêm thành công.",
+        status: "success", // Changed to correct status value
         duration: 5000,
         isClosable: true,
       });
-      navigate("/admin/Category"); // Redirect to the category list page
+      navigate("/admin/category"); // Ensure the correct path for navigation
     } catch (error) {
-      console.error("Failed to add category:", error);
+      console.error("Không thêm được danh mục:", error);
       toast({
-        title: "Error adding category.",
-        description: "Failed to add the category.",
-        status: "error",
+        title: "Lỗi khi thêm danh mục.",
+        description: "Không thêm được danh mục.",
+        status: "error", // Changed to correct status value
         duration: 5000,
         isClosable: true,
       });
@@ -61,7 +60,7 @@ const AddCategoryPage = () => {
 
   return (
     <Box p={5} bg={bgColor} borderRadius="lg" boxShadow="md">
-      <Heading mb={5}>Thêm danh mục </Heading>
+      <Heading mb={5}>Thêm danh mục</Heading>
       <form onSubmit={handleSubmit}>
         <FormControl id="name" mb={4} isInvalid={errors.name}>
           <FormLabel>Tên danh mục</FormLabel>

@@ -257,9 +257,9 @@ const EditUser = () => {
         }
       } catch (error) {
         toast({
-          title: "Error fetching user.",
-          description: "Failed to fetch user details.",
-          status: "error",
+          title: "Lỗi khi tìm nạp người dùng.",
+          description: "Không lấy được thông tin chi tiết của người dùng.",
+          status: "lỗi",
           duration: 5000,
           isClosable: true,
         });
