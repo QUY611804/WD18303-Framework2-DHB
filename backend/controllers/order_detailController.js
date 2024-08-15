@@ -61,7 +61,7 @@ const { validationResult } = require('express-validator'); // Optional: để x�
 // Update order status
 exports.updateOrderDetailStatus = (req, res) => {
     const { id } = req.params; // ID đơn hàng từ URL
-    const { status } = req.body; // Trạng thái mới từ nội dung yêu cầu
+    const { statuss } = req.body; // Trạng thái mới từ nội dung yêu cầu
 
     // Xác thực đầu vào (tùy chọn)
     const errors = validationResult(req);
@@ -73,7 +73,7 @@ exports.updateOrderDetailStatus = (req, res) => {
     const query = `UPDATE order_detail SET statuss = ? WHERE order_id = ?`;
 
     // Execute the query
-    connection.query(query, [status, id], (err, results) => {
+    connection.query(query, [statuss, id], (err, results) => {
         if (err) {
             console.error("Error updating order status:", err);
             return res.status(500).json({ error: err.message });
