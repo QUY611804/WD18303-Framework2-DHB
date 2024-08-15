@@ -94,7 +94,7 @@ const CategoryPage = () => {
         <Thead>
           <Tr>
           <Th>stt</Th>
-            <Th>ID</Th>
+            <Th display="none">ID</Th>
             <Th>Category</Th>
             <Th>Actions</Th>
           </Tr>
@@ -102,8 +102,8 @@ const CategoryPage = () => {
         <Tbody>
           {categories.map((category, index) => (
             <Tr key={category.id} _hover={{ bg: hoverBgColor }}>
-              <Td fontWeight="bold">{index + 1}</Td>
-              <Td>{category.id}</Td>
+              <Td  fontWeight="bold">{index + 1}</Td>
+              <Td display="none">{category.id}</Td>
               <Td>{category.name}</Td>
               <Td>
                 <Link to={`admin/Category/edit/${category.id}`}>
