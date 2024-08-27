@@ -14,14 +14,17 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { fetchOrderDetailById, updateOrderDetailStatus } from "../../../../service/api/order_detail"; 
-import { deleteOrder } from '../../../../service/api/orders';
+import {
+  fetchOrderDetailById,
+  updateOrderDetailStatus,
+} from "../../../../service/api/order_detail";
+import { deleteOrder } from "../../../../service/api/orders";
 
 const OrderDetailTable = () => {
-  const { orderId } = useParams(); 
+  const { orderId } = useParams();
   const [orderDetails, setOrderDetails] = useState([]);
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const toast = useToast();
   const hoverBgColor = useColorModeValue("gray.100", "gray.700");
   const headerBgColor = useColorModeValue("gray.200", "gray.800");
@@ -44,9 +47,12 @@ const OrderDetailTable = () => {
 
   const handleApprove = async (itemId) => {
     try {
-      console.log(`Updating status for order ID: ${itemId}`);
+      console.log(`Updating status for order ID: ${itemId}`); //Dòng này ghi lại thông báo vào bảng điều khiển, cho biết trạng thái của đơn hàng cụ thể itemIdsắp được cập nhật.
       await updateOrderDetailStatus(itemId, "Đã xác nhận");
+      //: Đây là hàm cập nhật trạng thái được cung cấp bởi useStatehook trong React
       setOrderDetails((prevDetails) =>
+        //Dòng này lặp lại từng mục trong prevDetails(biểu thị danh sách chi tiết đơn hàng trước đó) và cập nhật statussthuộc tính của đơn hàng bằng giá trị khớp order_id
+        // Hàm này maptạo một mảng mới dựa trên prevDetailsmảng hiện tạ
         prevDetails.map((item) =>
           item.order_id === itemId ? { ...item, statuss: "Đã xác nhận" } : item
         )
@@ -70,7 +76,9 @@ const OrderDetailTable = () => {
   };
 
   const handleDelete = async (itemId) => {
-    const confirmDelete = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
+    const confirmDelete = window.confirm(
+      "Bạn có chắc chắn muốn hủy đơn hàng này không?"
+    );
     if (confirmDelete) {
       try {
         console.log(`Cancelling order ID: ${itemId}`);

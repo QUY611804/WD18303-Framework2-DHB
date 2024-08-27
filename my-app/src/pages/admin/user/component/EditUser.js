@@ -347,7 +347,7 @@ const EditUser = () => {
         <FormLabel>Phân quyền</FormLabel>
         <Select value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="admin">Admin</option>
-          <option value="aser">User</option>
+          <option value="user">User</option>
         </Select>
         <FormErrorMessage>{errors.role}</FormErrorMessage>
       </FormControl>
